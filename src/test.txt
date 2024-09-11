@@ -1,0 +1,29 @@
+CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL
+);
+
+CREATE TABLE inventory (
+  id SERIAL PRIMARY KEY,
+  product_id INTEGER REFERENCES products(id),
+  item_count INTEGER NOT NULL
+);
+
+CREATE TABLE sales (
+  id SERIAL PRIMARY KEY,
+  product_id INTEGER REFERENCES products(id),
+  item_count INTEGER NOT NULL,
+  amount DECIMAL NOT NULL,
+  date DATE NOT NULL
+);
+
+CREATE TABLE equipments (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL
+);
+
+CREATE TABLE maintenance (
+  id SERIAL PRIMARY KEY,
+  equipment_id INTEGER REFERENCES equipments(id),
+  date_maintained DATE NOT NULL
+);
