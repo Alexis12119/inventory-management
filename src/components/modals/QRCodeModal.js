@@ -25,7 +25,7 @@ const QRCodeModal = ({ isOpen, onClose, data, name }) => {
         {data && (
           <div className="flex flex-col items-center">
             <div id="qr-code" className="mb-4">
-              <QRCodeSVG value={JSON.stringify(data)} size={256} />
+              <QRCodeSVG value={JSON.stringify(data.id)} size={256} />
             </div>
             {name && <p className="text-lg font-medium mb-4">{name}</p>}
             <div className="flex justify-between w-full">
