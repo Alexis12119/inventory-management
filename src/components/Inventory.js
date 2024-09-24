@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import useSupabaseData from '../hooks/useSupabaseData';
-import QRCodeModal from './modals/QRCodeModal.js';
-import { supabase } from './auth/supabaseClient';
-import html2canvas from 'html2canvas';
+import React, { useState } from "react";
+import useSupabaseData from "../hooks/useSupabaseData";
+import QRCodeModal from "./modals/QRCodeModal.js";
+import { supabase } from "./auth/supabaseClient";
+import html2canvas from "html2canvas";
 
 const Inventory = () => {
   const { data: inventoryRecords } = useSupabaseData("inventory");
@@ -16,6 +16,7 @@ const Inventory = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [showQRCodeModal, setShowQRCodeModal] = useState(false);
   const [qrCodeData, setQRCodeData] = useState(null);
+  const [showEditForm, setShowEditForm] = useState(false);
 
   const handleAdd = async () => {
     if (!newItemName || !newItemCount || !newItemPrice) {
@@ -45,8 +46,8 @@ const Inventory = () => {
     setEditItemCount(record.item_count);
     setEditPrice(record.price);
     setEditName(record.product_name);
+    setShowEditForm(true); // Show the edit modal
   };
-
   const handleSave = async (recordId) => {
     if (editItemCount === null || editPrice === null || !editName) {
       alert("Please enter item name, item count, and price.");
@@ -61,7 +62,7 @@ const Inventory = () => {
     await supabase
       .from("inventory")
       .update({
-        product_name: editName, 
+        product_name: editName,
         item_count: parseInt(editItemCount),
         price: parseFloat(editPrice),
       })
@@ -152,6 +153,50 @@ const Inventory = () => {
           </div>
         </div>
       )}
+      {showEditForm && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+          <div className="bg-white p-4 rounded w-80 max-w-xs">
+            <h2 className="text-xl font-bold mb-4">Edit Inventory Item</h2>
+            <input
+              type="text"
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              placeholder="Item Name"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="number"
+              value={editItemCount}
+              onChange={(e) => setEditItemCount(e.target.value)}
+              placeholder="Item Count"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="number"
+              step="0.01"
+              value={editPrice}
+              onChange={(e) => setEditPrice(e.target.value)}
+              placeholder="Price"
+              className="border p-2 mb-2 w-full"
+            />
+            <button
+              onClick={() => {
+                handleSave(editRecordId);
+                setShowEditForm(false);
+              }}
+              className="bg-blue-500 text-white py-2 px-4 rounded mr-2"
+            >
+              Save
+            </button>
+            <button
+              onClick={() => setShowEditForm(false)}
+              className="bg-red-500 text-white py-2 px-4 rounded"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-300">
@@ -170,41 +215,13 @@ const Inventory = () => {
               <tr key={record.id} className="text-gray-600">
                 <td className="py-2 px-4 border-b text-center">{record.id}</td>
                 <td className="py-2 px-4 border-b text-center">
-                  {editRecordId === record.id ? (
-                    <input
-                      type="text"
-                      value={editName}
-                      onChange={(e) => setEditName(e.target.value)}
-                      className="border p-1 w-24"
-                    />
-                  ) : (
-                    record.product_name
-                  )}
+                  {record.product_name}
                 </td>
                 <td className="py-2 px-4 border-b text-center">
-                  {editRecordId === record.id ? (
-                    <input
-                      type="number"
-                      value={editItemCount}
-                      onChange={(e) => setEditItemCount(e.target.value)}
-                      className="border p-1 w-24"
-                    />
-                  ) : (
-                    record.item_count
-                  )}
+                  {record.item_count}
                 </td>
                 <td className="py-2 px-4 border-b text-center">
-                  {editRecordId === record.id ? (
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={editPrice}
-                      onChange={(e) => setEditPrice(e.target.value)}
-                      className="border p-1 w-24"
-                    />
-                  ) : (
-                    `₱${record.price.toFixed(2)}`
-                  )}
+                  ₱{record.price.toFixed(2)}
                 </td>
                 <td className="py-2 px-4 border-b text-center">
                   {record.last_modified
@@ -212,21 +229,12 @@ const Inventory = () => {
                     : "N/A"}
                 </td>
                 <td className="py-2 px-4 border-b space-x-2 space-y-2 text-center">
-                  {editRecordId === record.id ? (
-                    <button
-                      onClick={() => handleSave(record.id)}
-                      className="bg-green-500 text-white py-1 px-3 rounded"
-                    >
-                      Save
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => handleEditClick(record)}
-                      className="bg-yellow-500 text-white py-1 px-3 rounded"
-                    >
-                      Edit
-                    </button>
-                  )}
+                  <button
+                    onClick={() => handleEditClick(record)}
+                    className="bg-yellow-500 text-white py-1 px-3 rounded"
+                  >
+                    Edit
+                  </button>
                   <button
                     onClick={() => handleDelete(record.id)}
                     className="bg-red-500 text-white py-1 px-3 rounded"
