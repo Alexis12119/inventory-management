@@ -15,6 +15,7 @@ const Equipments = () => {
   const [deleteItemId, setDeleteItemId] = useState(null);
   const [showQRCodeModal, setShowQRCodeModal] = useState(false);
   const [qrCodeData, setQRCodeData] = useState(null);
+  const [showActionsMenu, setShowActionsMenu] = useState(null);
 
   const handleDelete = async () => {
     await supabase
@@ -29,6 +30,10 @@ const Equipments = () => {
   const handleGenerateQRCode = (equipment) => {
     setQRCodeData(equipment);
     setShowQRCodeModal(true);
+  };
+
+  const toggleActionsMenu = (id) => {
+    setShowActionsMenu(showActionsMenu === id ? null : id);
   };
 
   return (
@@ -48,7 +53,7 @@ const Equipments = () => {
             <tr className="bg-gray-200 text-gray-700">
               <th className="py-2 px-4 border-b text-center">Equipment ID</th>
               <th className="py-2 px-4 border-b text-center">Equipment Name</th>
-              <th className="py-2 px-4 border-b text-center">Days Interval </th>
+              <th className="py-2 px-4 border-b text-center">Days Interval</th>
               <th className="py-2 px-4 border-b text-center">Actions</th>
             </tr>
           </thead>
@@ -58,31 +63,46 @@ const Equipments = () => {
                 <td className="py-2 px-4 border-b text-center">{equip.id}</td>
                 <td className="py-2 px-4 border-b text-center">{equip.name}</td>
                 <td className="py-2 px-4 border-b text-center">{equip.days_interval}</td>
-                <td className="py-2 px-4 border-b space-x-2 space-y-2 text-center">
+                <td className="py-2 px-4 border-b text-center relative">
                   <button
-                    onClick={() => {
-                      setEditItem(equip);
-                      setShowEditModal(true);
-                    }}
-                    className="bg-yellow-500 text-white py-1 px-2 rounded"
+                    onClick={() => toggleActionsMenu(equip.id)}
+                    className="bg-gray-300 text-black py-1 px-2 rounded"
                   >
-                    Edit
+                    •••
                   </button>
-                  <button
-                    onClick={() => {
-                      setDeleteItemId(equip.id);
-                      setShowDeleteModal(true);
-                    }}
-                    className="bg-red-500 text-white py-1 px-2 rounded"
-                  >
-                    Delete
-                  </button>
-                  <button
-                    onClick={() => handleGenerateQRCode(equip)}
-                    className="bg-green-500 text-white py-1 px-2 rounded"
-                  >
-                    Generate QR
-                  </button>
+                  {showActionsMenu === equip.id && (
+                    <div className="absolute left-[-120px] top-0 bg-white border border-gray-300 rounded shadow-lg z-10">
+                      <button
+                        onClick={() => {
+                          setEditItem(equip);
+                          setShowEditModal(true);
+                          toggleActionsMenu(equip.id);
+                        }}
+                        className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => {
+                          setDeleteItemId(equip.id);
+                          setShowDeleteModal(true);
+                          toggleActionsMenu(equip.id);
+                        }}
+                        className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                      >
+                        Delete
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleGenerateQRCode(equip);
+                          toggleActionsMenu(equip.id);
+                        }}
+                        className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                      >
+                        Generate QR
+                      </button>
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}
