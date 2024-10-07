@@ -17,6 +17,7 @@ const Inventory = () => {
   const [showQRCodeModal, setShowQRCodeModal] = useState(false);
   const [qrCodeData, setQRCodeData] = useState(null);
   const [showEditForm, setShowEditForm] = useState(false);
+  const [showActionsMenu, setShowActionsMenu] = useState(null);
 
   const handleAdd = async () => {
     if (!newItemName || !newItemCount || !newItemPrice) {
@@ -46,8 +47,13 @@ const Inventory = () => {
     setEditItemCount(record.item_count);
     setEditPrice(record.price);
     setEditName(record.product_name);
-    setShowEditForm(true); // Show the edit modal
+    setShowEditForm(true); 
   };
+
+  const toggleActionsMenu = (id) => {
+    setShowActionsMenu(showActionsMenu === id ? null : id);
+  };
+
   const handleSave = async (recordId) => {
     if (editItemCount === null || editPrice === null || !editName) {
       alert("Please enter item name, item count, and price.");
@@ -214,39 +220,50 @@ const Inventory = () => {
             {inventoryRecords.map((record) => (
               <tr key={record.id} className="text-gray-600">
                 <td className="py-2 px-4 border-b text-center">{record.id}</td>
+                <td className="py-2 px-4 border-b text-center">{record.product_name}</td>
+                <td className="py-2 px-4 border-b text-center">{record.item_count}</td>
+                <td className="py-2 px-4 border-b text-center">₱{record.price.toFixed(2)}</td>
                 <td className="py-2 px-4 border-b text-center">
-                  {record.product_name}
+                  {record.last_modified ? new Date(record.last_modified).toLocaleString() : "N/A"}
                 </td>
-                <td className="py-2 px-4 border-b text-center">
-                  {record.item_count}
-                </td>
-                <td className="py-2 px-4 border-b text-center">
-                  ₱{record.price.toFixed(2)}
-                </td>
-                <td className="py-2 px-4 border-b text-center">
-                  {record.last_modified
-                    ? new Date(record.last_modified).toLocaleString()
-                    : "N/A"}
-                </td>
-                <td className="py-2 px-4 border-b space-x-2 space-y-2 text-center">
+                <td className="py-2 px-4 border-b text-center relative">
                   <button
-                    onClick={() => handleEditClick(record)}
-                    className="bg-yellow-500 text-white py-1 px-3 rounded"
+                    onClick={() => toggleActionsMenu(record.id)}
+                    className="bg-gray-300 text-black py-1 px-2 rounded"
                   >
-                    Edit
+                    •••
                   </button>
-                  <button
-                    onClick={() => handleDelete(record.id)}
-                    className="bg-red-500 text-white py-1 px-3 rounded"
-                  >
-                    Delete
-                  </button>
-                  <button
-                    onClick={() => handleGenerateQRCode(record)}
-                    className="bg-green-500 text-white py-1 px-3 rounded"
-                  >
-                    Generate QR
-                  </button>
+                  {showActionsMenu === record.id && (
+                    <div className="absolute left-[-120px] top-0 bg-white border border-gray-300 rounded shadow-lg z-10">
+                      <button
+                        onClick={() => {
+                          handleEditClick(record);
+                          toggleActionsMenu(record.id);
+                        }}
+                        className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleDelete(record.id);
+                          toggleActionsMenu(record.id);
+                        }}
+                        className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                      >
+                        Delete
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleGenerateQRCode(record);
+                          toggleActionsMenu(record.id);
+                        }}
+                        className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                      >
+                        Generate QR
+                      </button>
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}
