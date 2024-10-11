@@ -1,6 +1,6 @@
 import React from 'react';
-import GenericModal from '../modals/GenericModal';
-import { supabase } from '../auth/supabaseClient.js';
+import GenericModal from '../../modals/GenericModal';
+import { supabase } from '../../auth/supabaseClient.js';
 
 const EditEquipmentModal = ({ isOpen, onClose, item }) => {
   const handleEdit = async (data) => {

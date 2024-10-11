@@ -1,7 +1,7 @@
-import AddEquipmentModal from './modals/AddEquipmentModal';
-import EditEquipmentModal from './modals/EditEquipmentModal';
+import AddEquipmentModal from './modals/Equipments/AddEquipmentModal';
+import EditEquipmentModal from './modals/Equipments/EditEquipmentModal';
 import QRCodeModal from './modals/QRCodeModal';
-import DeleteConfirmationModal from './modals/DeleteConfirmationModal';
+import DeleteConfirmationModal from './modals/Equipments/DeleteConfirmationModal';
 import React, { useState } from "react";
 import useSupabaseData from '../hooks/useSupabaseData';
 import { supabase } from './auth/supabaseClient.js';
