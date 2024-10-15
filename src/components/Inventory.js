@@ -5,7 +5,7 @@ import { supabase } from "./auth/supabaseClient";
 import html2canvas from "html2canvas";
 
 const Inventory = () => {
-  const { data: inventoryRecords } = useSupabaseData("inventory");
+  const { data: inventoryRecords, refreshData } = useSupabaseData("inventory");
   const [editRecordId, setEditRecordId] = useState(null);
   const [editItemCount, setEditItemCount] = useState(null);
   const [editPrice, setEditPrice] = useState(null);
@@ -36,6 +36,7 @@ const Inventory = () => {
       price: parseFloat(newItemPrice),
     });
 
+    refreshData();
     setNewItemName("");
     setNewItemCount("");
     setNewItemPrice("");
@@ -79,6 +80,7 @@ const Inventory = () => {
       .update({ item_name: editName })
       .match({ product_id: recordId });
 
+    refreshData(); // Refresh data to update the UI
     setEditRecordId(null);
   };
 
@@ -86,6 +88,7 @@ const Inventory = () => {
     if (window.confirm("Are you sure you want to delete this record?")) {
       await supabase.from("inventory").delete().match({ id: recordId });
     }
+    refreshData(); // Refresh data to update the UI
   };
 
   const handleGenerateQRCode = (record) => {

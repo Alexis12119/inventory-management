@@ -1,13 +1,13 @@
-import AddEquipmentModal from './modals/Equipments/AddEquipmentModal';
-import EditEquipmentModal from './modals/Equipments/EditEquipmentModal';
-import QRCodeModal from './modals/QRCodeModal';
-import DeleteConfirmationModal from './modals/Equipments/DeleteConfirmationModal';
+import AddEquipmentModal from "./modals/Equipments/AddEquipmentModal";
+import EditEquipmentModal from "./modals/Equipments/EditEquipmentModal";
+import QRCodeModal from "./modals/QRCodeModal";
+import DeleteConfirmationModal from "./modals/Equipments/DeleteConfirmationModal";
 import React, { useState } from "react";
-import useSupabaseData from '../hooks/useSupabaseData';
-import { supabase } from './auth/supabaseClient.js';
+import useSupabaseData from "../hooks/useSupabaseData";
+import { supabase } from "./auth/supabaseClient.js";
 
 const Equipments = () => {
-  const { data: equipments } = useSupabaseData("equipments");
+  const { data: equipments, refreshData } = useSupabaseData("equipments");
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -17,6 +17,35 @@ const Equipments = () => {
   const [qrCodeData, setQRCodeData] = useState(null);
   const [showActionsMenu, setShowActionsMenu] = useState(null);
 
+  const handleAdd = async (data) => {
+    await supabase.from("equipments").insert(data);
+    refreshData();
+  };
+
+  const handleEdit = async (data) => {
+    const { id, name } = data;
+
+    const { error } = await supabase
+      .from("equipments")
+      .update(data)
+      .match({ id });
+
+    if (error) {
+      alert("Error updating equipment: " + error.message);
+      return;
+    }
+
+    const { error: maintenanceError } = await supabase
+      .from("maintenance")
+      .update({ equipment_name: name })
+      .match({ equipment_id: id });
+
+    refreshData();
+    if (maintenanceError) {
+      alert("Error updating maintenance records: " + maintenanceError.message);
+    }
+  };
+
   const handleDelete = async () => {
     await supabase
       .from("maintenance")
@@ -24,6 +53,7 @@ const Equipments = () => {
       .match({ equipment_id: deleteItemId });
     await supabase.from("equipments").delete().match({ id: deleteItemId });
 
+    refreshData();
     setShowDeleteModal(false);
   };
 
@@ -62,7 +92,9 @@ const Equipments = () => {
               <tr key={equip.id} className="text-gray-600">
                 <td className="py-2 px-4 border-b text-center">{equip.id}</td>
                 <td className="py-2 px-4 border-b text-center">{equip.name}</td>
-                <td className="py-2 px-4 border-b text-center">{equip.days_interval}</td>
+                <td className="py-2 px-4 border-b text-center">
+                  {equip.days_interval}
+                </td>
                 <td className="py-2 px-4 border-b text-center relative">
                   <button
                     onClick={() => toggleActionsMenu(equip.id)}
@@ -113,12 +145,14 @@ const Equipments = () => {
       <AddEquipmentModal
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
+        onAdd={handleAdd}
       />
 
       <EditEquipmentModal
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}
-        item={editItem}
+        onEdit={handleEdit}
+        equipment={editItem}
       />
 
       <DeleteConfirmationModal

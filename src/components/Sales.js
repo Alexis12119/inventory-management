@@ -6,7 +6,7 @@ import EditSalesModal from './modals/Sales/EditSalesModal';
 import DeleteConfirmationModal from './modals/Sales/DeleteConfirmationModal';
 
 const Sales = () => {
-  const { data: salesRecords } = useSupabaseData("sales");
+  const { data: salesRecords, refreshData } = useSupabaseData("sales");
   const { data: inventoryRecords } = useSupabaseData("inventory");
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -43,6 +43,7 @@ const Sales = () => {
       .update({ item_count: product.item_count - itemCount })
       .match({ id: product.id });
 
+    refreshData();
     setShowAddModal(false);
   };
 
@@ -78,6 +79,7 @@ const Sales = () => {
       })
       .match({ id: record.product_id });
 
+    refreshData();
     setShowEditModal(false);
   };
 
@@ -94,6 +96,7 @@ const Sales = () => {
       .update({ item_count: product.item_count + record.item_count })
       .match({ id: product.id });
 
+    refreshData();
     setShowDeleteModal(false);
   };
 
