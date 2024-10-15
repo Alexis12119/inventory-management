@@ -71,7 +71,7 @@ const Equipments = () => {
                     •••
                   </button>
                   {showActionsMenu === equip.id && (
-                    <div className="absolute left-[-120px] top-10 w-48 bg-white border border-gray-300 rounded shadow-lg z-50">
+                    <div className="absolute left-[-150px] top-[-50px] w-48 bg-white border border-gray-300 rounded shadow-lg z-50">
                       <button
                         onClick={() => {
                           setEditItem(equip);

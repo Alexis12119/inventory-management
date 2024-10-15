@@ -153,7 +153,7 @@ const Sales = () => {
                       •••
                     </button>
                     {showActionsMenu === record.id && (
-                      <div className="absolute left-[-120px] top-10 w-48 mt-2 bg-white border border-gray-300 rounded shadow-lg z-10">
+                      <div className="absolute left-[-170px] top-[-50px] w-48 mt-2 bg-white border border-gray-300 rounded shadow-lg z-10">
                         <button
                           onClick={() => {
                             setEditItem(record);

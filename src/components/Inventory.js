@@ -243,7 +243,7 @@ const Inventory = () => {
                   </button>
                   {showActionsMenu === record.id && (
                     <div
-                      className="absolute left-[-120px] top-10 w-48 bg-white border border-gray-300 rounded shadow-lg z-50" // Set high z-index
+                      className="absolute left-[-170px] top-[-70px] w-48 bg-white border border-gray-300 rounded shadow-lg z-50" // Set high z-index
                       style={{ minWidth: "150px" }} // Ensure the dropdown has a minimum width
                     >
                       <button
