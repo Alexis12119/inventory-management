@@ -47,7 +47,7 @@ const Inventory = () => {
     setEditItemCount(record.item_count);
     setEditPrice(record.price);
     setEditName(record.product_name);
-    setShowEditForm(true); 
+    setShowEditForm(true);
   };
 
   const toggleActionsMenu = (id) => {
@@ -220,11 +220,19 @@ const Inventory = () => {
             {inventoryRecords.map((record) => (
               <tr key={record.id} className="text-gray-600">
                 <td className="py-2 px-4 border-b text-center">{record.id}</td>
-                <td className="py-2 px-4 border-b text-center">{record.product_name}</td>
-                <td className="py-2 px-4 border-b text-center">{record.item_count}</td>
-                <td className="py-2 px-4 border-b text-center">₱{record.price.toFixed(2)}</td>
                 <td className="py-2 px-4 border-b text-center">
-                  {record.last_modified ? new Date(record.last_modified).toLocaleString() : "N/A"}
+                  {record.product_name}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {record.item_count}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  ₱{record.price.toFixed(2)}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {record.last_modified
+                    ? new Date(record.last_modified).toLocaleString()
+                    : "N/A"}
                 </td>
                 <td className="py-2 px-4 border-b text-center relative">
                   <button
@@ -234,13 +242,16 @@ const Inventory = () => {
                     •••
                   </button>
                   {showActionsMenu === record.id && (
-                    <div className="absolute left-[-120px] top-0 bg-white border border-gray-300 rounded shadow-lg z-10">
+                    <div
+                      className="absolute left-[-120px] top-10 w-48 bg-white border border-gray-300 rounded shadow-lg z-50" // Set high z-index
+                      style={{ minWidth: "150px" }} // Ensure the dropdown has a minimum width
+                    >
                       <button
                         onClick={() => {
                           handleEditClick(record);
                           toggleActionsMenu(record.id);
                         }}
-                        className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                        className="text-center block w-full px-4 py-2 text-gray-800 hover:bg-gray-200"
                       >
                         Edit
                       </button>
@@ -249,7 +260,7 @@ const Inventory = () => {
                           handleDelete(record.id);
                           toggleActionsMenu(record.id);
                         }}
-                        className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                        className="block w-full px-4 py-2 text-gray-800 hover:bg-gray-200 text-center"
                       >
                         Delete
                       </button>
@@ -258,7 +269,7 @@ const Inventory = () => {
                           handleGenerateQRCode(record);
                           toggleActionsMenu(record.id);
                         }}
-                        className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                        className="block w-full px-4 py-2 text-gray-800 hover:bg-gray-200 text-center"
                       >
                         Generate QR
                       </button>

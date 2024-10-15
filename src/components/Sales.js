@@ -153,14 +153,14 @@ const Sales = () => {
                       •••
                     </button>
                     {showActionsMenu === record.id && (
-                      <div className="absolute right-0 mt-2 bg-white border border-gray-300 rounded shadow-lg z-10">
+                      <div className="absolute left-[-120px] top-10 w-48 mt-2 bg-white border border-gray-300 rounded shadow-lg z-10">
                         <button
                           onClick={() => {
                             setEditItem(record);
                             setShowEditModal(true);
                             toggleActionsMenu(record.id);
                           }}
-                          className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
+                          className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-center"
                         >
                           Edit
                         </button>
@@ -170,7 +170,7 @@ const Sales = () => {
                             setShowDeleteModal(true);
                             toggleActionsMenu(record.id);
                           }}
-                          className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
+                          className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-center"
                         >
                           Delete
                         </button>

@@ -71,14 +71,14 @@ const Equipments = () => {
                     •••
                   </button>
                   {showActionsMenu === equip.id && (
-                    <div className="absolute left-[-120px] top-0 bg-white border border-gray-300 rounded shadow-lg z-10">
+                    <div className="absolute left-[-120px] top-10 w-48 bg-white border border-gray-300 rounded shadow-lg z-50">
                       <button
                         onClick={() => {
                           setEditItem(equip);
                           setShowEditModal(true);
                           toggleActionsMenu(equip.id);
                         }}
-                        className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                        className="block w-full px-4 py-2 text-center text-gray-800 hover:bg-gray-200"
                       >
                         Edit
                       </button>
@@ -88,7 +88,7 @@ const Equipments = () => {
                           setShowDeleteModal(true);
                           toggleActionsMenu(equip.id);
                         }}
-                        className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                        className="block w-full px-4 py-2 text-center text-gray-800 hover:bg-gray-200"
                       >
                         Delete
                       </button>
@@ -97,7 +97,7 @@ const Equipments = () => {
                           handleGenerateQRCode(equip);
                           toggleActionsMenu(equip.id);
                         }}
-                        className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                        className="block w-full px-4 py-2 text-center text-gray-800 hover:bg-gray-200"
                       >
                         Generate QR
                       </button>
