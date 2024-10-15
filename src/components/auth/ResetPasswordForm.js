@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from './supabaseClient';
 
 const ResetPassword = () => {
@@ -7,8 +7,23 @@ const ResetPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
-  const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Extract the token from the URL
+    const hash = window.location.hash.substring(1);
+    const params = new URLSearchParams(hash);
+    const accessToken = params.get('access_token');
+    const refreshToken = params.get('refresh_token');
+
+    if (accessToken && refreshToken) {
+      // Set the session using the tokens
+      supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken,
+      });
+    }
+  }, []);
 
   const handleResetPassword = async () => {
     if (password !== confirmPassword) {
@@ -16,17 +31,18 @@ const ResetPassword = () => {
       return;
     }
 
-    // Use the reset token to update the user's password
-    const query = new URLSearchParams(location.search);
-    const token = query.get('token');
-    const { error } = await supabase.auth.updateUser({ password });
-
-    if (error) {
-      setError(error.message);
-    } else {
-      setSuccess(true);
-      alert("Password reset successful. You can now log in.");
-      navigate('/'); // Redirect to login page
+    try {
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) {
+        setError(error.message);
+      } else {
+        setSuccess(true);
+        alert("Password reset successful. You can now log in.");
+        navigate('/'); // Redirect to login page
+      }
+    } catch (error) {
+      setError("An error occurred while resetting the password.");
+      console.error("Password reset error:", error);
     }
   };
 
