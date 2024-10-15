@@ -1,79 +1,86 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { supabase } from './supabaseClient';
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { supabase } from "./supabaseClient";
 
-const ResetPassword = () => {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
+const ResetPasswordForm = () => {
+  const [newPassword, setNewPassword] = useState("");
+  const [tokenVerified, setTokenVerified] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Helper function to extract token from query params
+  const extractTokenFromQuery = () => {
+    console.log("Location object:", location);
+    const queryParams = new URLSearchParams(location.search);
+    return queryParams.get("token"); // Get 'token' from query string
+  };
 
   useEffect(() => {
-    // Extract the token from the URL
-    const hash = window.location.hash.substring(1);
-    const params = new URLSearchParams(hash);
-    const accessToken = params.get('access_token');
-    const refreshToken = params.get('refresh_token');
-    console.log(accessToken)
+    const verifyToken = async () => {
+      const token = extractTokenFromQuery();
+      console.log(token);
 
-    if (accessToken && refreshToken) {
-      // Set the session using the tokens
-      supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken,
-      });
-    }
-  }, []);
+      if (token) {
+        const { error } = await supabase.auth.verifyOtp({
+          type: "recovery", // Type must be 'recovery' for password reset
+          token,
+        });
+
+        if (error) {
+          alert("Invalid or expired token.");
+        } else {
+          setTokenVerified(true); // Token verified successfully
+        }
+      } else {
+        alert("No token found in the URL.");
+      }
+
+      setLoading(false); // Finish loading regardless
+    };
+
+    verifyToken();
+  }, [location]);
 
   const handleResetPassword = async () => {
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
+    if (!newPassword) {
+      alert("Please enter a new password.");
       return;
     }
 
-    try {
-      const { error } = await supabase.auth.updateUser({ password });
-      if (error) {
-        setError(error.message);
-      } else {
-        setSuccess(true);
-        alert("Password reset successful. You can now log in.");
-        navigate('/'); // Redirect to login page
-      }
-    } catch (error) {
-      setError("An error occurred while resetting the password.");
-      console.error("Password reset error:", error);
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    if (error) {
+      alert(error.message);
+    } else {
+      alert("Password reset successful. Please log in.");
+      navigate("/"); // Redirect to login page
     }
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (!tokenVerified) return <div>Invalid or expired token.</div>;
 
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold text-center">Reset Your Password</h2>
-      {error && <div className="text-red-500">{error}</div>}
-      {success && <div className="text-green-500">Password reset successfully!</div>}
       <input
         type="password"
         placeholder="New Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
-      />
-      <input
-        type="password"
-        placeholder="Confirm New Password"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
+        value={newPassword}
+        onChange={(e) => setNewPassword(e.target.value)}
         className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
       />
       <button
         onClick={handleResetPassword}
         className="bg-blue-600 text-white py-3 px-6 rounded-full w-full hover:bg-blue-700 transition duration-300 font-semibold"
       >
-        Set New Password
+        Reset Password
       </button>
     </div>
   );
 };
 
-export default ResetPassword;
+export default ResetPasswordForm;
