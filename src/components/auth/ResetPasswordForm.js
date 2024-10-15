@@ -14,7 +14,7 @@ const ResetPassword = () => {
     const query = new URLSearchParams(location.search);
     const token = query.get('token');
     const type = query.get('type');
-    console.log(type, token)
+    console.log(type, token, query)
 
     // Check if the token is present and type is "recovery"
     if (!token || type !== 'recovery') {
