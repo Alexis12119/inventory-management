@@ -20,13 +20,13 @@ const Maintenance = () => {
 
   const handleAdd = async () => {
     if (!newEquipmentId) {
-      alert("Please enter an equipment ID.");
+      alert("Please select an equipment.");
       return;
     }
 
     const equipment = findEquipment(newEquipmentId);
     if (!equipment.id) {
-      alert("Invalid equipment ID.");
+      alert("Invalid equipment selected.");
       return;
     }
 
@@ -64,13 +64,21 @@ const Maintenance = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
           <div className="bg-white p-4 rounded w-80 max-w-xs">
             <h2 className="text-xl font-bold mb-4">Add Maintenance Record</h2>
-            <input
-              type="text"
+
+            {/* Dropdown to select equipment */}
+            <select
               value={newEquipmentId}
               onChange={(e) => setNewEquipmentId(e.target.value)}
-              placeholder="Equipment ID"
               className="border p-2 mb-2 w-full"
-            />
+            >
+              <option value="" disabled>Select Equipment</option>
+              {equipments.map((equipment) => (
+                <option key={equipment.id} value={equipment.id}>
+                  {equipment.name}
+                </option>
+              ))}
+            </select>
+
             <button
               onClick={handleAdd}
               className="bg-blue-500 text-white py-2 px-4 rounded mr-2"
