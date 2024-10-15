@@ -113,7 +113,7 @@ const Sales = () => {
         </button>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto pb-4 pt-3">
         <table className="min-w-full bg-white border border-gray-300">
           <thead>
             <tr className="bg-gray-200 text-gray-700">
@@ -153,7 +153,7 @@ const Sales = () => {
                       •••
                     </button>
                     {showActionsMenu === record.id && (
-                      <div className="absolute left-[-170px] top-[-50px] w-48 mt-2 bg-white border border-gray-300 rounded shadow-lg z-10">
+                      <div className="absolute left-[-170px] top-[-30px] w-48 mt-2 bg-white border border-gray-300 rounded shadow-lg z-10">
                         <button
                           onClick={() => {
                             setEditItem(record);

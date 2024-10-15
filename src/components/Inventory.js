@@ -204,7 +204,7 @@ const Inventory = () => {
         </div>
       )}
 
-      <div className="overflow-x-auto pb-10">
+      <div className="overflow-x-auto pb-10 pt-3">
         <table className="min-w-full bg-white border border-gray-300">
           <thead>
             <tr className="bg-gray-200 text-gray-700">
@@ -243,7 +243,7 @@ const Inventory = () => {
                   </button>
                   {showActionsMenu === record.id && (
                     <div
-                      className="absolute left-[-170px] top-[-70px] w-48 bg-white border border-gray-300 rounded shadow-lg z-50" // Set high z-index
+                      className="absolute left-[-170px] top-[-40px] w-48 bg-white border border-gray-300 rounded shadow-lg z-50" // Set high z-index
                       style={{ minWidth: "150px" }} // Ensure the dropdown has a minimum width
                     >
                       <button

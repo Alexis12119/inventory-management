@@ -47,7 +47,7 @@ const Equipments = () => {
           Add
         </button>
       </div>
-      <div className="overflow-x-auto pb-14">
+      <div className="overflow-x-auto pb-14 pt-4">
         <table className="min-w-full bg-white border border-gray-300">
           <thead>
             <tr className="bg-gray-200 text-gray-700">
