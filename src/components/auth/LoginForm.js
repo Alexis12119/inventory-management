@@ -50,7 +50,7 @@ const LoginForm = () => {
         onClick={() => navigate('/signup')}
         className="text-blue-600 hover:underline w-full"
       >
-        Don't have an account? Create one
+      Sign Up
       </button>
       <button
         onClick={() => navigate('/forgot-password')}

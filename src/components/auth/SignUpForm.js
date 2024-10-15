@@ -50,7 +50,7 @@ const SignUpForm = () => {
         onClick={() => navigate('/')}
         className="text-blue-600 hover:underline w-full"
       >
-        Already have an account? Log in
+        Back to Log in
       </button>
     </div>
   );
