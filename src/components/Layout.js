@@ -18,7 +18,8 @@ const Layout = ({ children }) => {
     }
   };
 
-  const shouldShowSidebar = location.pathname !== "/";
+  // Update the condition to include signup and forgot password routes
+  const shouldShowSidebar = !["/", "/signup", "/forgot-password"].includes(location.pathname);
 
   return (
     <div className="relative flex">

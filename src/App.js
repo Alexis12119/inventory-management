@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Auth from './components/auth/Auth';
+import LoginForm from './components/auth/LoginForm'; 
+import SignUpForm from './components/auth/SignUpForm';
+import ForgotPasswordForm from './components/auth/ForgotPasswordForm';
 import Layout from './components/Layout';
 import Inventory from './components/Inventory';
 import Sales from './components/Sales';
@@ -12,7 +14,9 @@ const App = () => (
   <Router>
     <Layout>
       <Routes>
-        <Route path="/" element={<Auth />} />
+        <Route path="/" element={<LoginForm />} />
+        <Route path="/signup" element={<SignUpForm />} />
+        <Route path="/forgot-password" element={<ForgotPasswordForm />} />
         <Route path="/equipments" element={<PrivateRoute element={<Equipments />} />} />
         <Route path="/inventory" element={<PrivateRoute element={<Inventory />} />} />
         <Route path="/sales" element={<PrivateRoute element={<Sales />} />} />
