@@ -9,29 +9,37 @@ const ResetPasswordForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Extract the token from the URL
-  const token = new URLSearchParams(location.search).get('token');
+  // Helper function to extract token from query params
+  const extractTokenFromQuery = () => {
+    const queryParams = new URLSearchParams(location.search);
+    return queryParams.get('token'); // Get 'token' from query string
+  };
 
   useEffect(() => {
     const verifyToken = async () => {
+      const token = extractTokenFromQuery();
+      console.log(token);
+
       if (token) {
         const { error } = await supabase.auth.verifyOtp({
-          type: 'recovery',
+          type: 'recovery', // Type must be 'recovery' for password reset
           token,
         });
+
         if (error) {
-          alert("Invalid or expired token");
+          alert("Invalid or expired token.");
         } else {
-          setTokenVerified(true);
+          setTokenVerified(true); // Token verified successfully
         }
       } else {
         alert("No token found in the URL.");
       }
-      setLoading(false);
+
+      setLoading(false); // Finish loading regardless
     };
-    
+
     verifyToken();
-  }, [token]);
+  }, [location]);
 
   const handleResetPassword = async () => {
     if (!newPassword) {
@@ -42,6 +50,7 @@ const ResetPasswordForm = () => {
     const { error } = await supabase.auth.updateUser({
       password: newPassword,
     });
+    
     if (error) {
       alert(error.message);
     } else {
