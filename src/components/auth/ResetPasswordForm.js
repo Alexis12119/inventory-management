@@ -15,6 +15,7 @@ const ResetPassword = () => {
     const params = new URLSearchParams(hash);
     const accessToken = params.get('access_token');
     const refreshToken = params.get('refresh_token');
+    console.log(accessToken)
 
     if (accessToken && refreshToken) {
       // Set the session using the tokens
