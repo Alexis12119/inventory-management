@@ -7,14 +7,16 @@ const ForgotPasswordForm = () => {
   const navigate = useNavigate();
 
   const handleForgotPassword = async () => {
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://inventory-management-rust-mu.vercel.app/reset-password',
+    });
     if (error) alert(error.message);
     else alert("Password reset email sent. Please check your inbox.");
   };
 
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold text-center">Forgot Your Password?</h2> {/* Updated Title */}
+      <h2 className="text-2xl font-bold text-center">Forgot Your Password?</h2>
       <input
         type="email"
         placeholder="Email"
