@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
-import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
-import { supabase } from './supabaseClient';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
+import { supabase } from "./supabaseClient";
+import { useNavigate } from "react-router-dom";
 
-const AuthForm = ({ isSignUp, isForgotPassword, setIsForgotPassword, setIsSignUp }) => {
+const AuthForm = ({
+  isSignUp,
+  isForgotPassword,
+  setIsForgotPassword,
+  setIsSignUp,
+}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -15,7 +20,10 @@ const AuthForm = ({ isSignUp, isForgotPassword, setIsForgotPassword, setIsSignUp
       if (error) alert(error.message);
       else alert("Signup successful. Please check your email.");
     } else {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
       if (error) alert(error.message);
       else navigate("/inventory");
     }
@@ -99,6 +107,14 @@ const AuthForm = ({ isSignUp, isForgotPassword, setIsForgotPassword, setIsSignUp
             </>
           )}
         </>
+      )}
+      {isSignUp && ( // Add back to login link for signup
+        <button
+          onClick={() => setIsSignUp(false)}
+          className="text-blue-600 hover:underline w-full"
+        >
+          Already have an account? Login
+        </button>
       )}
     </div>
   );
