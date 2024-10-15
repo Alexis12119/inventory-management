@@ -9,12 +9,14 @@ const ResetPassword = () => {
   const [success, setSuccess] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-
+  const [accessToken, setAccessToken] = useState("");
   useEffect(() => {
     const query = new URLSearchParams(location.search);
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      setAccessToken(hashParams.get("token") || "");
     const token = query.get('token');
     const type = query.get('type');
-    console.log(type, token, query)
+    console.log(accessToken)
 
     // Check if the token is present and type is "recovery"
     if (!token || type !== 'recovery') {
