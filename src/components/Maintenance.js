@@ -5,7 +5,7 @@ import useSupabaseData from '../hooks/useSupabaseData';
 import { supabase } from './auth/supabaseClient';
 
 const Maintenance = () => {
-  const { data: maintenanceRecords } = useSupabaseData("maintenance");
+  const { data: maintenanceRecords, refreshData } = useSupabaseData("maintenance");
   const { data: equipments } = useSupabaseData("equipments");
   const [editRecordId] = useState(null);
   const [editDate, setEditDate] = useState(null);
@@ -37,6 +37,8 @@ const Maintenance = () => {
       date_maintained: new Date().toISOString().split("T")[0], // Set current date
     });
 
+    refreshData();
+
     // Reset form fields and hide form
     setNewEquipmentId("");
     setShowAddForm(false);
@@ -46,6 +48,7 @@ const Maintenance = () => {
     if (window.confirm("Are you sure you want to delete this record?")) {
       await supabase.from("maintenance").delete().match({ id: recordId });
     }
+    refreshData();
   };
 
   return (
