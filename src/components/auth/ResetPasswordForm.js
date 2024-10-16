@@ -12,7 +12,16 @@ const ResetPasswordForm = () => {
   const navigate = useNavigate();
   const accessToken = searchParams.get("token");
   console.log(accessToken);
-
+  useEffect(() => {
+    if (accessToken) {
+      supabase.auth.setSession({
+        accessToken,
+        accessToken,
+      });
+    } else {
+      setMessage("Missing access token");
+    }
+  }, [location]);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -21,16 +30,6 @@ const ResetPasswordForm = () => {
       return;
     }
 
-    useEffect(() => {
-      if (accessToken) {
-        supabase.auth.setSession({
-          accessToken,
-          accessToken,
-        });
-      } else {
-        setMessage("Missing access token");
-      }
-    }, [location]);
     const userSession = await supabase.auth.getSession();
     console.log("userSession 1:", userSession);
     const { error } = await supabase.auth.updateUser({
