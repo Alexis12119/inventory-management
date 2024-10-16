@@ -1,5 +1,5 @@
-// components/auth/ResetPasswordForm.js
 import React, { useState } from "react";
+import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from './supabaseClient';
 
