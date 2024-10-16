@@ -10,8 +10,6 @@ const ResetPasswordForm = () => {
   const [message, setMessage] = useState("");
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const accessToken = searchParams.get("token");
-  console.log(accessToken);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,7 +19,7 @@ const ResetPasswordForm = () => {
       return;
     }
 
-    const { error } = await supabase.auth.updateUser(accessToken, {
+    const { error } = await supabase.auth.updateUser({
       password: password,
     });
 
