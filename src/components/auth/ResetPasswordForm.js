@@ -31,7 +31,7 @@ const ResetPasswordForm = () => {
         setMessage("Missing access token");
       }
     }, [location]);
-    const userSession = await anonClient.auth.getSession();
+    const userSession = await supabase.auth.getSession();
     console.log("userSession 1:", userSession);
     const { error } = await supabase.auth.updateUser({
       password: password,
