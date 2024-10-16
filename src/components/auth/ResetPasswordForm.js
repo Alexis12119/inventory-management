@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
+import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { supabase } from './supabaseClient';
+import { supabase } from "./supabaseClient";
 
 const ResetPasswordForm = () => {
   const [password, setPassword] = useState("");
@@ -10,6 +10,8 @@ const ResetPasswordForm = () => {
   const [message, setMessage] = useState("");
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const accessToken = searchParams.get("token");
+  console.log(accessToken);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,6 +21,18 @@ const ResetPasswordForm = () => {
       return;
     }
 
+    useEffect(() => {
+      if (accessToken) {
+        supabase.auth.setSession({
+          accessToken,
+          accessToken,
+        });
+      } else {
+        setMessage("Missing access token");
+      }
+    }, [location]);
+    const userSession = await anonClient.auth.getSession();
+    console.log("userSession 1:", userSession);
     const { error } = await supabase.auth.updateUser({
       password: password,
     });
