@@ -11,7 +11,6 @@ const ResetPasswordForm = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const accessToken = searchParams.get("token");
-  console.log(accessToken);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
