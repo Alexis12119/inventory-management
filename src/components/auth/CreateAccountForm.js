@@ -3,16 +3,16 @@ import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import { supabase } from './supabaseClient';
 import { useNavigate } from 'react-router-dom';
 
-const SignUpForm = () => {
+const CreateAccountForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleSignUp = async () => {
+  const handleCreateAccount = async () => {
     const { error } = await supabase.auth.signUp({ email, password });
     if (error) alert(error.message);
-    else alert("Signup successful. Please check your email.");
+    else alert("Creating account successful. Please check your email.");
   };
 
   return (
@@ -41,7 +41,7 @@ const SignUpForm = () => {
         </div>
       </div>
       <button
-        onClick={handleSignUp}
+        onClick={handleCreateAccount}
         className="bg-blue-600 text-white py-3 px-6 rounded-full w-full hover:bg-blue-700 transition duration-300 font-semibold"
       >
         Sign Up
@@ -56,4 +56,4 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpForm;
+export default CreateAccountForm;

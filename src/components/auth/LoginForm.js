@@ -41,22 +41,16 @@ const LoginForm = () => {
         </div>
       </div>
       <button
-        onClick={handleLogin}
-        className="bg-blue-600 text-white py-3 px-6 rounded-full w-full hover:bg-blue-700 transition duration-300 font-semibold"
-      >
-        Login
-      </button>
-      <button
-        onClick={() => navigate('/signup')}
-        className="text-blue-600 hover:underline w-full"
-      >
-      Sign Up
-      </button>
-      <button
         onClick={() => navigate('/forgot-password')}
         className="text-blue-600 hover:underline w-full"
       >
         Forgot Password?
+      </button>
+      <button
+        onClick={handleLogin}
+        className="bg-blue-600 text-white py-3 px-6 rounded-full w-full hover:bg-blue-700 transition duration-300 font-semibold"
+      >
+        Login
       </button>
     </div>
   );

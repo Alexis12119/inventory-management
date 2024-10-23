@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginForm from './components/auth/LoginForm'; 
-import SignUpForm from './components/auth/SignUpForm';
+import CreateAccountForm from './components/auth/CreateAccountForm';
 import ForgotPasswordForm from './components/auth/ForgotPasswordForm';
 import ResetPasswordForm from './components/auth/ResetPasswordForm';
 import Layout from './components/Layout';
@@ -16,7 +16,7 @@ const App = () => (
     <Layout>
       <Routes>
         <Route path="/" element={<LoginForm />} />
-        <Route path="/signup" element={<SignUpForm />} />
+        <Route path="/create-account" element={<CreateAccountForm />} />
         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
         <Route path="/reset-password" element={<ResetPasswordForm />} />
         <Route path="/equipments" element={<PrivateRoute element={<Equipments />} />} />
