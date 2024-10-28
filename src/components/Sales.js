@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import useSupabaseData from "../hooks/useSupabaseData";
 import { supabase } from "./auth/supabaseClient";
-import AddSalesModal from './modals/Sales/AddSalesModal';
-import EditSalesModal from './modals/Sales/EditSalesModal';
-import DeleteConfirmationModal from './modals/Sales/DeleteConfirmationModal';
+import AddSalesModal from "./modals/Sales/AddSalesModal";
+import EditSalesModal from "./modals/Sales/EditSalesModal";
+import DeleteConfirmationModal from "./modals/Sales/DeleteConfirmationModal";
 
 const Sales = () => {
   const { data: salesRecords, refreshData } = useSupabaseData("sales");
@@ -15,9 +15,40 @@ const Sales = () => {
   const [deleteItemId, setDeleteItemId] = useState(null);
   const [showActionsMenu, setShowActionsMenu] = useState(null);
 
+  const handleExportCSV = () => {
+    const csvData = [
+      ["Item Name", "Item Count", "Price Amount", "Last Modified"],
+      ...salesRecords.map((record) => {
+        const product = inventoryRecords.find(
+          (item) => item.id === record.product_id,
+        );
+        return [
+          product ? product.product_name : "N/A",
+          record.item_count,
+          `₱${record.amount.toFixed(2)}`,
+          record.last_modified
+            ? new Date(record.last_modified).toLocaleString()
+            : "N/A",
+        ];
+      }),
+    ];
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      csvData.map((row) => row.join(",")).join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "sales_records.csv");
+    document.body.appendChild(link); // Required for Firefox
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const handleAdd = async (newProductId, newItemCount) => {
     const product = inventoryRecords.find(
-      (item) => item.id === parseInt(newProductId)
+      (item) => item.id === parseInt(newProductId),
     );
     if (!product) {
       alert("Invalid product ID.");
@@ -50,7 +81,7 @@ const Sales = () => {
   const handleEdit = async (recordId, editItemCount) => {
     const record = salesRecords.find((rec) => rec.id === recordId);
     const product = inventoryRecords.find(
-      (item) => item.id === record.product_id
+      (item) => item.id === record.product_id,
     );
 
     const newItemCount = parseInt(editItemCount);
@@ -86,7 +117,7 @@ const Sales = () => {
   const handleDelete = async () => {
     const record = salesRecords.find((rec) => rec.id === deleteItemId);
     const product = inventoryRecords.find(
-      (item) => item.id === record.product_id
+      (item) => item.id === record.product_id,
     );
 
     await supabase.from("sales").delete().match({ id: deleteItemId });
@@ -108,18 +139,27 @@ const Sales = () => {
     <div className="p-2">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Sales Records</h1>
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="bg-blue-500 text-white py-2 px-4 rounded"
-        >
-          Add Sale
-        </button>
+        <div className="flex space-x-2">
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="bg-blue-500 text-white py-2 px-4 rounded"
+          >
+            Add Sale
+          </button>
+          <button
+            onClick={handleExportCSV}
+            className="bg-green-500 text-white py-2 px-4 rounded"
+          >
+            Export as CSV
+          </button>
+        </div>
       </div>
 
       <div className="overflow-x-auto pb-4 pt-3">
         <table className="min-w-full bg-white border border-gray-300">
           <thead>
             <tr className="bg-gray-200 text-gray-700">
+              <th className="py-2 px-4 border-b text-center">Student ID</th>
               <th className="py-2 px-4 border-b text-center">Item Name</th>
               <th className="py-2 px-4 border-b text-center">Item Count</th>
               <th className="py-2 px-4 border-b text-center">Price Amount</th>
@@ -130,10 +170,13 @@ const Sales = () => {
           <tbody>
             {salesRecords.map((record) => {
               const product = inventoryRecords.find(
-                (item) => item.id === record.product_id
+                (item) => item.id === record.product_id,
               );
               return (
                 <tr key={record.id} className="text-gray-600">
+                  <td className="py-2 px-4 border-b text-center">
+                    {record.student_id}
+                  </td>
                   <td className="py-2 px-4 border-b text-center">
                     {product ? product.product_name : "N/A"}
                   </td>
