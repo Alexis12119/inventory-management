@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
   const [newProductId, setNewProductId] = useState("");
   const [newItemCount, setNewItemCount] = useState("");
+  const [studentId, setStudentId] = useState(""); // New student ID state
 
   if (!isOpen) return null;
 
@@ -10,6 +11,13 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-4 rounded-lg">
         <h2 className="text-xl font-bold mb-4">Add Sales Record</h2>
+        <input
+          type="text"
+          value={studentId}
+          onChange={(e) => setStudentId(e.target.value)}
+          placeholder="Student ID"
+          className="border p-2 mb-2 w-full"
+        />
         <select
           value={newProductId}
           onChange={(e) => setNewProductId(e.target.value)}
@@ -31,7 +39,7 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
         />
         <div className="flex justify-end">
           <button
-            onClick={() => onAdd(newProductId, newItemCount)}
+            onClick={() => onAdd(newProductId, newItemCount, studentId)}
             className="bg-blue-500 text-white py-2 px-4 rounded mr-2"
           >
             Add

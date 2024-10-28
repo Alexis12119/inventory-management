@@ -46,7 +46,7 @@ const Sales = () => {
     document.body.removeChild(link);
   };
 
-  const handleAdd = async (newProductId, newItemCount) => {
+  const handleAdd = async (newProductId, newItemCount, studentId) => {
     const product = inventoryRecords.find(
       (item) => item.id === parseInt(newProductId),
     );
@@ -67,6 +67,7 @@ const Sales = () => {
       product_id: product.id,
       item_count: itemCount,
       amount: amount,
+      student_id: studentId,
     });
 
     await supabase
@@ -78,7 +79,7 @@ const Sales = () => {
     setShowAddModal(false);
   };
 
-  const handleEdit = async (recordId, editItemCount) => {
+  const handleEdit = async (recordId, editItemCount, studentId) => {
     const record = salesRecords.find((rec) => rec.id === recordId);
     const product = inventoryRecords.find(
       (item) => item.id === record.product_id,
@@ -99,6 +100,7 @@ const Sales = () => {
       .update({
         item_count: newItemCount,
         amount: amount,
+        student_id: studentId,
         last_modified: new Date(),
       })
       .match({ id: recordId });
@@ -113,7 +115,6 @@ const Sales = () => {
     refreshData();
     setShowEditModal(false);
   };
-
   const handleDelete = async () => {
     const record = salesRecords.find((rec) => rec.id === deleteItemId);
     const product = inventoryRecords.find(
