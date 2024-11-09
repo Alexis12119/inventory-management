@@ -15,10 +15,37 @@ const Sales = () => {
   const [deleteItemId, setDeleteItemId] = useState(null);
   const [showActionsMenu, setShowActionsMenu] = useState(null);
 
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [showDateRangeModal, setShowDateRangeModal] = useState(false);
+
   const handleExportCSV = () => {
+    const filteredSalesRecords = salesRecords.filter((record) => {
+      const recordDate = new Date(record.last_modified);
+
+      // Ensure start and end dates are valid or fallback to default values
+      const start = startDate ? new Date(startDate) : new Date(0); // Default to the earliest possible date
+      const end = endDate ? new Date(endDate) : new Date(); // Default to current date
+
+      // Check if the record's last modified date is within the valid date range
+      // Ensure the start date isn't after the end date, otherwise reset
+      if (start > end) {
+        return false; // Invalid date range, no records should match
+      }
+
+      // If both dates are set, check if record date is between them
+      return recordDate >= start && recordDate <= end;
+    });
+
+    const grandTotal = filteredSalesRecords.reduce(
+      (total, record) => total + record.amount,
+      0,
+    );
+
     const csvData = [
+      ["Grand Total:", `₱${grandTotal.toFixed(2)}`, "", ""],
       ["Item Name", "Item Count", "Price Amount", "Last Modified"],
-      ...salesRecords.map((record) => {
+      ...filteredSalesRecords.map((record) => {
         const product = inventoryRecords.find(
           (item) => item.id === record.product_id,
         );
@@ -41,7 +68,7 @@ const Sales = () => {
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", "sales_records.csv");
-    document.body.appendChild(link); // Required for Firefox
+    document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
@@ -115,6 +142,7 @@ const Sales = () => {
     refreshData();
     setShowEditModal(false);
   };
+
   const handleDelete = async () => {
     const record = salesRecords.find((rec) => rec.id === deleteItemId);
     const product = inventoryRecords.find(
@@ -136,11 +164,46 @@ const Sales = () => {
     setShowActionsMenu(showActionsMenu === id ? null : id);
   };
 
+  // Filter sales records by the selected date range
+  const filteredSalesRecords = salesRecords.filter((record) => {
+    const recordDate = new Date(record.last_modified);
+
+    // Ensure start and end dates are valid or fallback to default values
+    const start = startDate ? new Date(startDate) : new Date(0); // Default to the earliest possible date
+    const end = endDate ? new Date(endDate) : new Date(); // Default to current date
+
+    // Check if the record's last modified date is within the valid date range
+    // Ensure the start date isn't after the end date, otherwise reset
+    if (start > end) {
+      return false; // Invalid date range, no records should match
+    }
+
+    // If both dates are set, check if record date is between them
+    return recordDate >= start && recordDate <= end;
+  });
+
+  const grandTotal = filteredSalesRecords.reduce(
+    (total, record) => total + record.amount,
+    0,
+  );
+
   return (
     <div className="p-2">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Sales Records</h1>
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 items-center">
+          <button
+            onClick={() => setShowDateRangeModal(true)}
+            className="bg-gray-300 text-black py-2 px-4 rounded"
+          >
+            Select Date Range
+          </button>
+
+          <div className="text-right py-2 px-4 bg-gray-200 rounded">
+            <span className="text-xl font-semibold">
+              Grand Total: ₱{grandTotal.toFixed(2)}
+            </span>
+          </div>
           <button
             onClick={() => setShowAddModal(true)}
             className="bg-blue-500 text-white py-2 px-4 rounded"
@@ -156,6 +219,42 @@ const Sales = () => {
         </div>
       </div>
 
+      {showDateRangeModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h2 className="text-xl font-semibold mb-4">Select Date Range</h2>
+            <div className="flex flex-col space-y-4">
+              <div>
+                <label className="block mb-2">Start Date</label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="py-2 px-4 border rounded"
+                />
+              </div>
+              <div>
+                <label className="block mb-2">End Date</label>
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="py-2 px-4 border rounded"
+                />
+              </div>
+            </div>
+            <div className="mt-4 flex justify-end space-x-2">
+              <button
+                onClick={() => setShowDateRangeModal(false)}
+                className="bg-gray-500 text-white py-2 px-4 rounded"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="overflow-x-auto pb-4 pt-3">
         <table className="min-w-full bg-white border border-gray-300">
           <thead>
@@ -169,7 +268,7 @@ const Sales = () => {
             </tr>
           </thead>
           <tbody>
-            {salesRecords.map((record) => {
+            {filteredSalesRecords.map((record) => {
               const product = inventoryRecords.find(
                 (item) => item.id === record.product_id,
               );
