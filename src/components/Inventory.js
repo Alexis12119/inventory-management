@@ -6,6 +6,8 @@ import html2canvas from "html2canvas";
 
 const Inventory = () => {
   const { data: inventoryRecords, refreshData } = useSupabaseData("inventory");
+  const [editItemId, setEditItemId] = useState(null);
+  const [editRemarks, setRemarks] = useState("");
   const [editRecordId, setEditRecordId] = useState(null);
   const [editItemCount, setEditItemCount] = useState(null);
   const [editPrice, setEditPrice] = useState(null);
@@ -45,6 +47,8 @@ const Inventory = () => {
 
   const handleEditClick = (record) => {
     setEditRecordId(record.id);
+    setEditItemId(record.id);
+    setRemarks(record.remarks);
     setEditItemCount(record.item_count);
     setEditPrice(record.price);
     setEditName(record.product_name);
@@ -66,22 +70,69 @@ const Inventory = () => {
       return;
     }
 
-    await supabase
+    const { data: existingItem, error: checkError } = await supabase
       .from("inventory")
-      .update({
-        product_name: editName,
-        item_count: parseInt(editItemCount),
-        price: parseFloat(editPrice),
-      })
-      .match({ id: recordId });
+      .select()
+      .eq("id", editItemId)
+      .neq("id", recordId)
+      .single();
 
-    await supabase
-      .from("sales")
-      .update({ item_name: editName })
-      .match({ product_id: recordId });
+    if (checkError && checkError.code !== "PGRST116") {
+      alert("Error checking item ID: " + checkError.message);
+      return;
+    }
 
-    refreshData(); // Refresh data to update the UI
-    setEditRecordId(null);
+    if (existingItem) {
+      alert("This item ID is already in use. Please choose a different ID.");
+      return;
+    }
+
+    try {
+      if (editItemId !== recordId) {
+        const { error: insertError } = await supabase.from("inventory").insert({
+          id: editItemId,
+          remarks: editRemarks,
+          product_name: editName,
+          item_count: parseInt(editItemCount),
+          price: parseFloat(editPrice),
+        });
+
+        if (insertError) throw insertError;
+
+        const { error: salesError } = await supabase
+          .from("sales")
+          .update({ product_id: editItemId })
+          .eq("product_id", recordId);
+
+        if (salesError) throw salesError;
+
+        const { error: deleteError } = await supabase
+          .from("inventory")
+          .delete()
+          .eq("id", recordId);
+
+        if (deleteError) throw deleteError;
+      } else {
+        const { error: updateError } = await supabase
+          .from("inventory")
+          .update({
+            remarks: editRemarks,
+            product_name: editName,
+            item_count: parseInt(editItemCount),
+            price: parseFloat(editPrice),
+          })
+          .eq("id", recordId);
+
+        if (updateError) throw updateError;
+      }
+
+      refreshData();
+      setEditRecordId(null);
+      setShowEditForm(false);
+    } catch (error) {
+      alert("Error updating inventory: " + error.message);
+      refreshData();
+    }
   };
 
   const handleDelete = async (recordId) => {
@@ -168,6 +219,13 @@ const Inventory = () => {
             <h2 className="text-xl font-bold mb-4">Edit Inventory Item</h2>
             <input
               type="text"
+              value={editItemId}
+              onChange={(e) => setEditItemId(e.target.value)}
+              placeholder="Item ID"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="text"
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
               placeholder="Item Name"
@@ -186,6 +244,13 @@ const Inventory = () => {
               value={editPrice}
               onChange={(e) => setEditPrice(e.target.value)}
               placeholder="Price"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="text"
+              value={editRemarks}
+              onChange={(e) => setRemarks(e.target.value)}
+              placeholder="Remarks"
               className="border p-2 mb-2 w-full"
             />
             <button
@@ -216,6 +281,7 @@ const Inventory = () => {
               <th className="py-2 px-4 border-b text-center">Item Count</th>
               <th className="py-2 px-4 border-b text-center">Price</th>
               <th className="py-2 px-4 border-b text-center">Last Modified</th>
+              <th className="py-2 px-4 border-b text-center">Remarks</th>
               <th className="py-2 px-4 border-b text-center">Actions</th>
             </tr>
           </thead>
@@ -237,6 +303,9 @@ const Inventory = () => {
                     ? new Date(record.last_modified).toLocaleString()
                     : "N/A"}
                 </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {record.remarks}
+                </td>
                 <td className="py-2 px-4 border-b text-center relative">
                   <button
                     onClick={() => toggleActionsMenu(record.id)}
@@ -247,7 +316,7 @@ const Inventory = () => {
                   {showActionsMenu === record.id && (
                     <div
                       className="absolute left-[-170px] top-[-40px] w-48 bg-white border border-gray-300 rounded shadow-lg z-50" // Set high z-index
-                      style={{ minWidth: "150px" }} // Ensure the dropdown has a minimum width
+                      style={{ minWidth: "150px" }}
                     >
                       <button
                         onClick={() => {
