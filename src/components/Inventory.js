@@ -198,6 +198,13 @@ const Inventory = () => {
               placeholder="Price"
               className="border p-2 mb-2 w-full"
             />
+            <input
+              type="text"
+              value={editRemarks}
+              onChange={(e) => setRemarks(e.target.value)}
+              placeholder="Remarks"
+              className="border p-2 mb-2 w-full"
+            />
             <button
               onClick={handleAdd}
               className="bg-blue-500 text-white py-2 px-4 rounded mr-2"

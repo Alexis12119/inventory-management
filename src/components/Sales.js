@@ -43,19 +43,20 @@ const Sales = () => {
     );
 
     const csvData = [
-      ["Grand Total:", `₱${grandTotal.toFixed(2)}`, "", ""],
-      ["Item Name", "Item Count", "Price Amount", "Last Modified"],
+      ["Grand Total:", `₱${grandTotal.toFixed(2)}`, "", "", ""],
+      ["Date", "Issuance No.", "Issued To", "Item ID", "Item Name"],
       ...filteredSalesRecords.map((record) => {
         const product = inventoryRecords.find(
           (item) => item.id === record.product_id,
         );
         return [
-          product ? product.product_name : "N/A",
-          record.item_count,
-          `₱${record.amount.toFixed(2)}`,
           record.last_modified
-            ? new Date(record.last_modified).toLocaleString()
-            : "N/A",
+            ? new Date(record.last_modified).toLocaleDateString() // Only show the date (without time)
+            : "N/A", // Display the date only
+          record.id, // Sales Item ID (id from sales table)
+          record.student_name || "N/A", // Issued To (student name)
+          product ? product.id : "N/A", // Inventory Item ID (id from inventory table)
+          product ? product.product_name : "N/A", // Item Name (from inventory)
         ];
       }),
     ];
@@ -73,10 +74,17 @@ const Sales = () => {
     document.body.removeChild(link);
   };
 
-  const handleAdd = async (newProductId, newItemCount, studentId) => {
+  const handleAdd = async (
+    newProductId,
+    newItemCount,
+    studentId,
+    studentName,
+    remarks,
+  ) => {
     const product = inventoryRecords.find(
       (item) => item.id === parseInt(newProductId),
     );
+
     if (!product) {
       alert("Invalid product ID.");
       return;
@@ -90,13 +98,18 @@ const Sales = () => {
 
     const amount = itemCount * product.price;
 
+    console.log(studentName, remarks);
+    // Insert new sales record with student name and remarks
     await supabase.from("sales").insert({
       product_id: product.id,
       item_count: itemCount,
       amount: amount,
       student_id: studentId,
+      student_name: studentName,
+      remarks: remarks,
     });
 
+    // Update inventory
     await supabase
       .from("inventory")
       .update({ item_count: product.item_count - itemCount })
@@ -106,7 +119,13 @@ const Sales = () => {
     setShowAddModal(false);
   };
 
-  const handleEdit = async (recordId, editItemCount, studentId) => {
+  const handleEdit = async (
+    recordId,
+    editItemCount,
+    studentId,
+    studentName,
+    remarks,
+  ) => {
     const record = salesRecords.find((rec) => rec.id === recordId);
     const product = inventoryRecords.find(
       (item) => item.id === record.product_id,
@@ -128,6 +147,8 @@ const Sales = () => {
         item_count: newItemCount,
         amount: amount,
         student_id: studentId,
+        student_name: studentName,
+        remarks: remarks,
         last_modified: new Date(),
       })
       .match({ id: recordId });
