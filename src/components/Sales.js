@@ -250,6 +250,15 @@ const Sales = () => {
               >
                 Close
               </button>
+              <button
+                onClick={() => {
+                  setStartDate("");
+                  setEndDate("");
+                }}
+                className="bg-red-500 text-white py-2 px-4 rounded"
+              >
+                Clear
+              </button>
             </div>
           </div>
         </div>
