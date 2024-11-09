@@ -6,6 +6,8 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
   const [studentId, setStudentId] = useState(""); // New student ID state
   const [addRemarks, setAddRemarks] = useState("");
   const [addStudentName, setAddStudentName] = useState("");
+  const [addDescription, setAddDescription] = useState("");
+  const [addCRNumber, setAddCRNumber] = useState("");
 
   if (!isOpen) return null;
 
@@ -53,6 +55,20 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
           placeholder="Remarks"
           className="border p-2 mb-2 w-full"
         />
+        <input
+          type="text"
+          value={addDescription}
+          onChange={(e) => setAddDescription(e.target.value)}
+          placeholder="Description"
+          className="border p-2 mb-2 w-full"
+        />
+        <input
+          type="text"
+          value={addCRNumber}
+          onChange={(e) => setAddCRNumber(e.target.value)}
+          placeholder="CR Number"
+          className="border p-2 mb-2 w-full"
+        />
         <div className="flex justify-end">
           <button
             onClick={() =>
@@ -62,6 +78,8 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
                 studentId,
                 addStudentName,
                 addRemarks,
+                addDescription,
+                addCRNumber,
               )
             }
             className="bg-blue-500 text-white py-2 px-4 rounded mr-2"

@@ -44,7 +44,15 @@ const Sales = () => {
 
     const csvData = [
       ["Grand Total:", `₱${grandTotal.toFixed(2)}`, "", "", ""],
-      ["Date", "Issuance No.", "Issued To", "Item ID", "Item Name"],
+      [
+        "Date",
+        "Issuance No.",
+        "CR Number",
+        "Issued To",
+        "Item ID",
+        "Item Description",
+        "Item Name",
+      ],
       ...filteredSalesRecords.map((record) => {
         const product = inventoryRecords.find(
           (item) => item.id === record.product_id,
@@ -54,8 +62,10 @@ const Sales = () => {
             ? new Date(record.last_modified).toLocaleDateString() // Only show the date (without time)
             : "N/A", // Display the date only
           record.id, // Sales Item ID (id from sales table)
+          record.cr_number || "N/A", // CR Number
           record.student_name || "N/A", // Issued To (student name)
           product ? product.id : "N/A", // Inventory Item ID (id from inventory table)
+          record.item_desc || "N/A", // Item Description
           product ? product.product_name : "N/A", // Item Name (from inventory)
         ];
       }),
@@ -80,6 +90,8 @@ const Sales = () => {
     studentId,
     studentName,
     remarks,
+    itemDesc,
+    crNumber,
   ) => {
     const product = inventoryRecords.find(
       (item) => item.id === parseInt(newProductId),
@@ -107,6 +119,8 @@ const Sales = () => {
       student_id: studentId,
       student_name: studentName,
       remarks: remarks,
+      item_desc: itemDesc,
+      cr_number: crNumber,
     });
 
     // Update inventory
@@ -125,6 +139,8 @@ const Sales = () => {
     studentId,
     studentName,
     remarks,
+    itemDesc,
+    crNumber,
   ) => {
     const record = salesRecords.find((rec) => rec.id === recordId);
     const product = inventoryRecords.find(
@@ -150,6 +166,8 @@ const Sales = () => {
         student_name: studentName,
         remarks: remarks,
         last_modified: new Date(),
+        item_desc: itemDesc,
+        cr_number: crNumber,
       })
       .match({ id: recordId });
 
