@@ -8,7 +8,6 @@ const EditSalesModal = ({
   inventoryRecords,
 }) => {
   const [editItemCount, setEditItemCount] = useState("");
-  const [studentId, setStudentId] = useState(""); // New student ID state
   const [editRemarks, setRemarks] = useState("");
   const [editStudentName, setEditStudentName] = useState("");
   const [editDescription, setEditDescription] = useState("");
@@ -17,7 +16,6 @@ const EditSalesModal = ({
   useEffect(() => {
     if (item) {
       setEditItemCount(item.item_count.toString());
-      setStudentId(item.student_id || "");
       setEditStudentName(item.student_name || "");
       setRemarks(item.remarks || "");
       setEditDescription(item.item_desc || "");
@@ -41,13 +39,7 @@ const EditSalesModal = ({
           placeholder="Item Count"
           className="border p-2 mb-2 w-full"
         />
-        <input
-          type="text"
-          value={studentId}
-          onChange={(e) => setStudentId(e.target.value)}
-          placeholder="Student ID"
-          className="border p-2 mb-2 w-full"
-        />
+    
         <input
           type="text"
           value={editStudentName}
@@ -73,7 +65,7 @@ const EditSalesModal = ({
           type="text"
           value={editCRNumber}
           onChange={(e) => setEditCRNumber(e.target.value)}
-          placeholder="CR Number"
+          placeholder="OR Number"
           className="border p-2 mb-2 w-full"
         />
         <div className="flex justify-end">
@@ -82,7 +74,6 @@ const EditSalesModal = ({
               onEdit(
                 item.id,
                 editItemCount,
-                studentId,
                 editStudentName,
                 editRemarks,
                 editDescription,

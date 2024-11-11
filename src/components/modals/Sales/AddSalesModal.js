@@ -3,7 +3,6 @@ import React, { useState } from "react";
 const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
   const [newProductId, setNewProductId] = useState("");
   const [newItemCount, setNewItemCount] = useState("");
-  const [studentId, setStudentId] = useState(""); // New student ID state
   const [addRemarks, setAddRemarks] = useState("");
   const [addStudentName, setAddStudentName] = useState("");
   const [addDescription, setAddDescription] = useState("");
@@ -27,13 +26,6 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
             </option>
           ))}
         </select>
-        <input
-          type="text"
-          value={studentId}
-          onChange={(e) => setStudentId(e.target.value)}
-          placeholder="Student ID"
-          className="border p-2 mb-2 w-full"
-        />
         <input
           type="text"
           value={addStudentName}
@@ -75,7 +67,6 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
               onAdd(
                 newProductId,
                 newItemCount,
-                studentId,
                 addStudentName,
                 addRemarks,
                 addDescription,

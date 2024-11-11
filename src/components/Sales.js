@@ -162,7 +162,6 @@ const Sales = () => {
       .update({
         item_count: newItemCount,
         amount: amount,
-        student_id: studentId,
         student_name: studentName,
         remarks: remarks,
         last_modified: new Date(),
@@ -307,11 +306,16 @@ const Sales = () => {
         <table className="min-w-full bg-white border border-gray-300">
           <thead>
             <tr className="bg-gray-200 text-gray-700">
-              <th className="py-2 px-4 border-b text-center">Student ID</th>
-              <th className="py-2 px-4 border-b text-center">Item Name</th>
-              <th className="py-2 px-4 border-b text-center">Item Count</th>
-              <th className="py-2 px-4 border-b text-center">Price Amount</th>
-              <th className="py-2 px-4 border-b text-center">Last Modified</th>
+              <th className="py-2 px-4 border-b text-center">Date</th>
+              <th className="py-2 px-4 border-b text-center">Issuance No.</th>
+              <th className="py-2 px-4 border-b text-center">OR Number</th>
+              <th className="py-2 px-4 border-b text-center">Issued To</th>
+              <th className="py-2 px-4 border-b text-center">Item Code</th>
+              <th className="py-2 px-4 border-b text-center">
+                Item Description
+              </th>
+              <th className="py-2 px-4 border-b text-center">Item Type</th>
+              <th className="py-2 px-4 border-b text-center">Remarks</th>
               <th className="py-2 px-4 border-b text-center">Actions</th>
             </tr>
           </thead>
@@ -323,21 +327,30 @@ const Sales = () => {
               return (
                 <tr key={record.id} className="text-gray-600">
                   <td className="py-2 px-4 border-b text-center">
+                    {new Date(record.last_modified).toLocaleDateString()}
+                  </td>
+                  <td className="py-2 px-4 border-b text-center">
                     {record.student_id}
+                  </td>
+                  <td className="py-2 px-4 border-b text-center">
+                    {record.cr_number}
+                  </td>
+                  <td className="py-2 px-4 border-b text-center">
+                    {record.student_name}
+                    {/* ₱{record.amount.toFixed(2)} */}
+                  </td>
+                  <td className="py-2 px-4 border-b text-center">
+
+                    {record.product_id}
+                  </td>
+                  <td className="py-2 px-4 border-b text-center">
+                    {record.item_desc}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
                     {product ? product.product_name : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
-                    {record.item_count}
-                  </td>
-                  <td className="py-2 px-4 border-b text-center">
-                    ₱{record.amount.toFixed(2)}
-                  </td>
-                  <td className="py-2 px-4 border-b text-center">
-                    {record.last_modified
-                      ? new Date(record.last_modified).toLocaleString()
-                      : "N/A"}
+                    {record.remarks}
                   </td>
                   <td className="py-2 px-4 border-b text-center relative">
                     <button
