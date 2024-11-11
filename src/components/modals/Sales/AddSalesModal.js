@@ -6,7 +6,7 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
   const [addRemarks, setAddRemarks] = useState("");
   const [addStudentName, setAddStudentName] = useState("");
   const [addDescription, setAddDescription] = useState("");
-  const [addCRNumber, setAddCRNumber] = useState("");
+  const [addORNumber, setAddORNumber] = useState("");
 
   if (!isOpen) return null;
 
@@ -56,9 +56,9 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
         />
         <input
           type="text"
-          value={addCRNumber}
-          onChange={(e) => setAddCRNumber(e.target.value)}
-          placeholder="CR Number"
+          value={addORNumber}
+          onChange={(e) => setAddORNumber(e.target.value)}
+          placeholder="OR Number"
           className="border p-2 mb-2 w-full"
         />
         <div className="flex justify-end">
@@ -70,7 +70,7 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
                 addStudentName,
                 addRemarks,
                 addDescription,
-                addCRNumber,
+                addORNumber,
               )
             }
             className="bg-blue-500 text-white py-2 px-4 rounded mr-2"

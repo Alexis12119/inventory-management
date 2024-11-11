@@ -11,7 +11,7 @@ const EditSalesModal = ({
   const [editRemarks, setRemarks] = useState("");
   const [editStudentName, setEditStudentName] = useState("");
   const [editDescription, setEditDescription] = useState("");
-  const [editCRNumber, setEditCRNumber] = useState("");
+  const [editORNumber, setEditORNumber] = useState("");
 
   useEffect(() => {
     if (item) {
@@ -19,7 +19,7 @@ const EditSalesModal = ({
       setEditStudentName(item.student_name || "");
       setRemarks(item.remarks || "");
       setEditDescription(item.item_desc || "");
-      setEditCRNumber(item.cr_number || "");
+      setEditORNumber(item.cr_number || "");
     }
   }, [item]);
 
@@ -63,8 +63,8 @@ const EditSalesModal = ({
         />
         <input
           type="text"
-          value={editCRNumber}
-          onChange={(e) => setEditCRNumber(e.target.value)}
+          value={editORNumber}
+          onChange={(e) => setEditORNumber(e.target.value)}
           placeholder="OR Number"
           className="border p-2 mb-2 w-full"
         />
@@ -77,7 +77,7 @@ const EditSalesModal = ({
                 editStudentName,
                 editRemarks,
                 editDescription,
-                editCRNumber,
+                editORNumber,
               )
             }
             className="bg-blue-500 text-white py-2 px-4 rounded mr-2"

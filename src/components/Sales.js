@@ -23,17 +23,13 @@ const Sales = () => {
     const filteredSalesRecords = salesRecords.filter((record) => {
       const recordDate = new Date(record.last_modified);
 
-      // Ensure start and end dates are valid or fallback to default values
       const start = startDate ? new Date(startDate) : new Date(0); // Default to the earliest possible date
       const end = endDate ? new Date(endDate) : new Date(); // Default to current date
 
-      // Check if the record's last modified date is within the valid date range
-      // Ensure the start date isn't after the end date, otherwise reset
       if (start > end) {
         return false; // Invalid date range, no records should match
       }
 
-      // If both dates are set, check if record date is between them
       return recordDate >= start && recordDate <= end;
     });
 
@@ -43,15 +39,16 @@ const Sales = () => {
     );
 
     const csvData = [
-      ["Grand Total:", `₱${grandTotal.toFixed(2)}`, "", "", ""],
+      ["Grand Total:", `₱${grandTotal.toFixed(2)}`, "", "", "", "", "", ""],
       [
         "Date",
         "Issuance No.",
-        "CR Number",
+        "OR Number", // This matches your column heading
         "Issued To",
-        "Item ID",
+        "Item Code", // This matches the "Item ID"
         "Item Description",
-        "Item Name",
+        "Item Type", // You seem to be missing this column in your export
+        "Remarks",
       ],
       ...filteredSalesRecords.map((record) => {
         const product = inventoryRecords.find(
@@ -59,21 +56,24 @@ const Sales = () => {
         );
         return [
           record.last_modified
-            ? new Date(record.last_modified).toLocaleDateString() // Only show the date (without time)
-            : "N/A", // Display the date only
-          record.id, // Sales Item ID (id from sales table)
-          record.cr_number || "N/A", // CR Number
-          record.student_name || "N/A", // Issued To (student name)
-          product ? product.id : "N/A", // Inventory Item ID (id from inventory table)
+            ? new Date(record.last_modified).toLocaleDateString() // Date only
+            : "N/A",
+          record.id, // Sales Item ID
+          record.cr_number || "N/A", // OR Number
+          record.student_name || "N/A", // Issued To
+          product ? product.id : "N/A", // Item Code (Inventory ID)
           record.item_desc || "N/A", // Item Description
-          product ? product.product_name : "N/A", // Item Name (from inventory)
+          product ? product.product_name : "N/A", // Item Type (assumed from product name)
+          record.remarks || "N/A", // Remarks
         ];
       }),
     ];
 
     const csvContent =
       "data:text/csv;charset=utf-8," +
-      csvData.map((row) => row.join(",")).join("\n");
+      csvData
+        .map((row) => row.map((field) => `"${field}"`).join(","))
+        .join("\n");
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
@@ -87,7 +87,6 @@ const Sales = () => {
   const handleAdd = async (
     newProductId,
     newItemCount,
-    studentId,
     studentName,
     remarks,
     itemDesc,
@@ -116,7 +115,6 @@ const Sales = () => {
       product_id: product.id,
       item_count: itemCount,
       amount: amount,
-      student_id: studentId,
       student_name: studentName,
       remarks: remarks,
       item_desc: itemDesc,
@@ -136,11 +134,10 @@ const Sales = () => {
   const handleEdit = async (
     recordId,
     editItemCount,
-    studentId,
     studentName,
     remarks,
     itemDesc,
-    crNumber,
+    orNumber,
   ) => {
     const record = salesRecords.find((rec) => rec.id === recordId);
     const product = inventoryRecords.find(
@@ -166,7 +163,7 @@ const Sales = () => {
         remarks: remarks,
         last_modified: new Date(),
         item_desc: itemDesc,
-        cr_number: crNumber,
+        cr_number: orNumber,
       })
       .match({ id: recordId });
 
@@ -330,27 +327,23 @@ const Sales = () => {
                     {new Date(record.last_modified).toLocaleDateString()}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
-                    {record.student_id}
+                    {record ? record.cr_number : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
-                    {record.cr_number}
-                  </td>
-                  <td className="py-2 px-4 border-b text-center">
-                    {record.student_name}
+                    {record ? record.student_name : "N/A"}
                     {/* ₱{record.amount.toFixed(2)} */}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
-
-                    {record.product_id}
+                    {record ? record.item_desc : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
-                    {record.item_desc}
+                    {record ? record.remarks : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
                     {product ? product.product_name : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
-                    {record.remarks}
+                    {record ? record.product_id : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center relative">
                     <button
