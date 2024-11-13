@@ -312,6 +312,7 @@ const Sales = () => {
                 Item Description
               </th>
               <th className="py-2 px-4 border-b text-center">Item Type</th>
+              <th className="py-2 px-4 border-b text-center">Amount</th>
               <th className="py-2 px-4 border-b text-center">Remarks</th>
               <th className="py-2 px-4 border-b text-center">Actions</th>
             </tr>
@@ -331,7 +332,6 @@ const Sales = () => {
                   </td>
                   <td className="py-2 px-4 border-b text-center">
                     {record ? record.student_name : "N/A"}
-                    {/* ₱{record.amount.toFixed(2)} */}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
                     {record ? record.item_desc : "N/A"}
@@ -344,6 +344,12 @@ const Sales = () => {
                   </td>
                   <td className="py-2 px-4 border-b text-center">
                     {record ? record.product_id : "N/A"}
+                  </td>
+                  <td className="py-2 px-4 border-b text-center">
+                    ₱{record ? record.amount.toFixed(2): "N/A"}
+                  </td>
+                  <td className="py-2 px-4 border-b text-center">
+                    {record ? record.remarks: "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center relative">
                     <button
