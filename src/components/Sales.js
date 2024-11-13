@@ -39,7 +39,7 @@ const Sales = () => {
     );
 
     const csvData = [
-      ["Grand Total:", `₱${grandTotal.toFixed(2)}`, "", "", "", "", "", ""],
+      ["Grand Total:", `₱${grandTotal.toFixed(2)}`, "", "", "", "", "", "", ""],
       [
         "Date",
         "Issuance No.",
@@ -47,7 +47,8 @@ const Sales = () => {
         "Issued To",
         "Item Code", // This matches the "Item ID"
         "Item Description",
-        "Item Type", // You seem to be missing this column in your export
+        "Item Type",
+        "Amount",
         "Remarks",
       ],
       ...filteredSalesRecords.map((record) => {
@@ -64,6 +65,7 @@ const Sales = () => {
           product ? product.id : "N/A", // Item Code (Inventory ID)
           record.item_desc || "N/A", // Item Description
           product ? product.product_name : "N/A", // Item Type (assumed from product name)
+          record.amount ? "₱ " + record.amount.toFixed(2) : "N/A", // Amount
           record.remarks || "N/A", // Remarks
         ];
       }),
@@ -346,10 +348,10 @@ const Sales = () => {
                     {record ? record.product_id : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
-                    ₱{record ? record.amount.toFixed(2): "N/A"}
+                    ₱{record ? record.amount.toFixed(2) : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
-                    {record ? record.remarks: "N/A"}
+                    {record ? record.remarks : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center relative">
                     <button
