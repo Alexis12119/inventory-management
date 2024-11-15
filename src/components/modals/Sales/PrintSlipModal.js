@@ -43,16 +43,23 @@ const PrintSlipModal = ({ isOpen, onClose, selectedRecord, inventoryData }) => {
           <title>Issuance Slip</title>
           <style>
             body { font-family: Arial, sans-serif; margin: 20px; }
-            h2 { text-align: center; font-size: 24px; margin-bottom: 20px; }
-            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            h2 { text-align: center; font-size: 18px; margin-bottom: 10px; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
             table, th, td { border: 1px solid #000; }
             th, td { padding: 8px; text-align: left; font-size: 14px; }
             th { background-color: #f2f2f2; }
             .total-row, .footer-row { font-weight: bold; background-color: #f9f9f9; }
+            .flex { display: flex; justify-content: space-between; }
+            .flex-col { display: flex; flex-direction: column; }
+            .text-center { text-align: center; }
+            .border-t { border-top: 1px solid #000; }
+            .w-48 { width: 12rem; }
+            .space { margin-bottom: 30px; }
           </style>
         </head>
         <body>
-          <h2>Issuance Slip</h2>
+          <h2>STI - SAN PABLO</h2>
+          <h2>STOCK ISSUANCE SLIP</h2>
           <div>
             <p><strong>Date:</strong> ${currentDate}</p>
             <p><strong>Issuance No:</strong> ${issuanceNo}</p>
@@ -99,6 +106,18 @@ const PrintSlipModal = ({ isOpen, onClose, selectedRecord, inventoryData }) => {
               <td>${orNumber}</td>
             </tr>
           </table>
+           <div class="font-bold space">Released by Date:</div>
+          <br />
+          <div class="flex ">
+            <div class="text-center">
+              <hr class="border-t w-48" />
+              <p>JAKE B. DE JESUS/PAMO</p>
+            </div>
+            <div class="text-center">
+              <hr class="border-t w-48" />
+              <p>JUVY ANN GARCIA/CASHIER</p>
+            </div>
+          </div>
         </body>
       </html>
     `);
@@ -111,8 +130,9 @@ const PrintSlipModal = ({ isOpen, onClose, selectedRecord, inventoryData }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-8 rounded">
-        <h2 className="text-xl font-semibold">Issuance Slip Preview</h2>
+      <div className="bg-white p-8 rounded max-w-4xl overflow-auto">
+        {" "}
+        {/* Add max width */}
         {isPreviewVisible && (
           <div className="mb-4">
             <div className="mb-2">
@@ -177,9 +197,23 @@ const PrintSlipModal = ({ isOpen, onClose, selectedRecord, inventoryData }) => {
                 </tr>
               </tbody>
             </table>
+
+            <br />
+            <div className="font-bold">Released by Date:</div>
+            <div className="mt-8 flex justify-between items-center w-full gap-x-12">
+              <div className="text-center">
+                <hr className="border-t border-black w-48 mx-auto" />
+                <p>Jake B. De Jesus / Pamo</p>
+              </div>
+              <div className="text-center">
+                <hr className="border-t border-black w-48 mx-auto" />
+                <p>Juvy Ann Garcia / Cashier</p>
+              </div>
+            </div>
           </div>
         )}
-        <div className="flex justify-between mt-4">
+        <div className="flex justify-between mt-4 gap-x-12">
+          {" "}
           <button
             onClick={handlePrint}
             className="bg-blue-500 text-white px-4 py-2 rounded"
