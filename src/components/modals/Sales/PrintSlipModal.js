@@ -5,10 +5,7 @@ const PrintSlipModal = ({ isOpen, onClose, selectedRecord, inventoryData }) => {
 
   const issuanceNo =
     selectedRecord.length > 0 ? selectedRecord[0].issuance_no : "N/A";
-  const currentDate =
-    selectedRecord.length > 0
-      ? new Date(selectedRecord[0].last_modified).toLocaleDateString()
-      : "N/A";
+  const currentDate = new Date().toLocaleDateString();
   const orNumber =
     selectedRecord.length > 0 ? selectedRecord[0].cr_number : "N/A";
 
