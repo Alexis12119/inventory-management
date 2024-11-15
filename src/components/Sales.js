@@ -91,7 +91,7 @@ const Sales = () => {
           record.last_modified
             ? new Date(record.last_modified).toLocaleDateString() // Date only
             : "N/A",
-          record.id, // Sales Item ID
+          record.issuance_no, // Sales Item ID
           record.cr_number || "N/A", // OR Number
           record.student_name || "N/A", // Issued To
           record.student_id || "N/A", // Student No.
