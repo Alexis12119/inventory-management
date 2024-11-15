@@ -8,6 +8,7 @@ const EditSalesModal = ({
   inventoryRecords,
 }) => {
   const [editItemCount, setEditItemCount] = useState("");
+  const [editIssuanceNo, setEditIssuanceNo] = useState("");
   const [editRemarks, setRemarks] = useState("");
   const [editStudentName, setEditStudentName] = useState("");
   const [editDescription, setEditDescription] = useState("");
@@ -24,6 +25,7 @@ const EditSalesModal = ({
       setEditORNumber(item.cr_number || "");
       setEditStudentId(item.student_id || "");
       setEditCourseAndSection(item.course_and_section || "");
+      setEditIssuanceNo(item.issuance_no || "");
     }
   }, [item]);
 
@@ -41,6 +43,13 @@ const EditSalesModal = ({
           value={editItemCount}
           onChange={(e) => setEditItemCount(e.target.value)}
           placeholder="Item Count"
+          className="border p-2 mb-2 w-full"
+        />
+        <input
+          type="text"
+          value={editIssuanceNo}
+          onChange={(e) => setEditIssuanceNo(e.target.value)}
+          placeholder="Issuance No"
           className="border p-2 mb-2 w-full"
         />
         <input
@@ -91,6 +100,7 @@ const EditSalesModal = ({
               onEdit(
                 item.id,
                 editItemCount,
+                editIssuanceNo,
                 editStudentName,
                 editStudentId,
                 editCourseAndSection,

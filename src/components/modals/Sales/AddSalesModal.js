@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
   const [newProductId, setNewProductId] = useState("");
+  const [newIssuanceNo, setNewIssuanceNo] = useState("");
   const [newItemCount, setNewItemCount] = useState("");
   const [addRemarks, setAddRemarks] = useState("");
   const [addStudentName, setAddStudentName] = useState("");
@@ -33,6 +34,13 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
           value={addStudentName}
           onChange={(e) => setAddStudentName(e.target.value)}
           placeholder="Issued to"
+          className="border p-2 mb-2 w-full"
+        />
+        <input
+          type="text"
+          value={newIssuanceNo}
+          onChange={(e) => setNewIssuanceNo(e.target.value)}
+          placeholder="Issuance No"
           className="border p-2 mb-2 w-full"
         />
         <input
@@ -84,6 +92,7 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
                 newProductId,
                 newItemCount,
                 addStudentName,
+                newIssuanceNo,
                 addStudentId,
                 addCourseAndSection,
                 addRemarks,

@@ -125,6 +125,7 @@ const Sales = () => {
     newProductId,
     newItemCount,
     studentName,
+    IssuanceNo,
     studentId,
     courseAndSection,
     remarks,
@@ -152,6 +153,7 @@ const Sales = () => {
       item_count: itemCount,
       amount: amount,
       student_name: studentName,
+      issuance_no: IssuanceNo,
       student_id: studentId,
       course_and_section: courseAndSection,
       remarks: remarks,
@@ -172,6 +174,7 @@ const Sales = () => {
   const handleEdit = async (
     recordId,
     editItemCount,
+    IssuanceNo,
     studentName,
     studentId,
     courseAndSection,
@@ -198,6 +201,7 @@ const Sales = () => {
       .from("sales")
       .update({
         item_count: newItemCount,
+        issuance_no: IssuanceNo,
         amount: amount,
         student_name: studentName,
         student_id: studentId,
