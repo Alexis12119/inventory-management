@@ -35,7 +35,7 @@ const EditSalesModal = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-4 rounded-lg">
+      <div className="bg-white p-4 rounded-lg w-96 max-w-full">
         <h2 className="text-xl font-bold mb-4">Edit Sales Record</h2>
         <p>Product: {product ? product.product_name : "N/A"}</p>
         <input
