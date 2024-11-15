@@ -200,11 +200,11 @@ const PrintSlipModal = ({ isOpen, onClose, selectedRecord, inventoryData }) => {
             <div className="mt-8 flex justify-between items-center w-full gap-x-12">
               <div className="text-center">
                 <hr className="border-t border-black w-48 mx-auto" />
-                <p>Jake B. De Jesus / Pamo</p>
+                <p>JAKE B. DE JESUS/PAMO</p>
               </div>
               <div className="text-center">
                 <hr className="border-t border-black w-48 mx-auto" />
-                <p>Juvy Ann Garcia / Cashier</p>
+                <p>JUVY ANN GARCIA/CASHIER</p>
               </div>
             </div>
           </div>
