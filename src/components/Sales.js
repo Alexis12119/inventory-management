@@ -4,12 +4,14 @@ import { supabase } from "./auth/supabaseClient";
 import AddSalesModal from "./modals/Sales/AddSalesModal";
 import EditSalesModal from "./modals/Sales/EditSalesModal";
 import DeleteConfirmationModal from "./modals/Sales/DeleteConfirmationModal";
+import PrintSlipModal from "./modals/Sales/PrintSlipModal";
 
 const Sales = () => {
   const { data: salesRecords, refreshData } = useSupabaseData("sales");
   const { data: inventoryRecords } = useSupabaseData("inventory");
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showPrintSlip, setShowPrintSlip] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [editItem, setEditItem] = useState(null);
   const [deleteItemId, setDeleteItemId] = useState(null);
@@ -18,7 +20,21 @@ const Sales = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [showDateRangeModal, setShowDateRangeModal] = useState(false);
+  const [recordsByOR, setRecordsByOR] = useState([]);
 
+  const fetchRecordsByOR = async (orNumber) => {
+    const { data, error } = await supabase
+      .from("sales")
+      .select("*")
+      .eq("cr_number", orNumber);
+
+    if (error) {
+      console.error("Error fetching records by OR:", error.message);
+    } else {
+      setRecordsByOR(data);
+      setShowPrintSlip(true); // Open the PrintSlipModal
+    }
+  };
   const handleExportCSV = () => {
     const filteredSalesRecords = salesRecords.filter((record) => {
       const recordDate = new Date(record.last_modified);
@@ -39,13 +55,29 @@ const Sales = () => {
     );
 
     const csvData = [
-      ["Grand Total:", `₱${grandTotal.toFixed(2)}`, "", "", "", "", "", "", ""],
+      [
+        "Grand Total:",
+        `₱${grandTotal.toFixed(2)}`,
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+      ],
       [
         "Date",
         "Issuance No.",
         "OR Number", // This matches your column heading
         "Issued To",
+        "Student No.",
+        "Course/Section",
         "Item Code", // This matches the "Item ID"
+        "Item Count",
         "Item Description",
         "Item Type",
         "Amount",
@@ -62,7 +94,10 @@ const Sales = () => {
           record.id, // Sales Item ID
           record.cr_number || "N/A", // OR Number
           record.student_name || "N/A", // Issued To
+          record.student_id || "N/A", // Student No.
+          record.course_and_section || "N/A", // Course/Section
           product ? product.id : "N/A", // Item Code (Inventory ID)
+          record ? record.item_count : "N/A", // Item Count
           record.item_desc || "N/A", // Item Description
           product ? product.product_name : "N/A", // Item Type (assumed from product name)
           record.amount ? "₱ " + record.amount.toFixed(2) : "N/A", // Amount
@@ -90,13 +125,13 @@ const Sales = () => {
     newProductId,
     newItemCount,
     studentName,
+    studentId,
+    courseAndSection,
     remarks,
     itemDesc,
     crNumber,
   ) => {
-    const product = inventoryRecords.find(
-      (item) => item.id === parseInt(newProductId),
-    );
+    const product = inventoryRecords.find((item) => item.id === newProductId);
 
     if (!product) {
       alert("Invalid product ID.");
@@ -111,13 +146,14 @@ const Sales = () => {
 
     const amount = itemCount * product.price;
 
-    console.log(studentName, remarks);
     // Insert new sales record with student name and remarks
     await supabase.from("sales").insert({
-      product_id: product.id,
+      product_id: newProductId,
       item_count: itemCount,
       amount: amount,
       student_name: studentName,
+      student_id: studentId,
+      course_and_section: courseAndSection,
       remarks: remarks,
       item_desc: itemDesc,
       cr_number: crNumber,
@@ -137,6 +173,8 @@ const Sales = () => {
     recordId,
     editItemCount,
     studentName,
+    studentId,
+    courseAndSection,
     remarks,
     itemDesc,
     orNumber,
@@ -162,6 +200,8 @@ const Sales = () => {
         item_count: newItemCount,
         amount: amount,
         student_name: studentName,
+        student_id: studentId,
+        course_and_section: courseAndSection,
         remarks: remarks,
         last_modified: new Date(),
         item_desc: itemDesc,
@@ -227,7 +267,7 @@ const Sales = () => {
   return (
     <div className="p-2">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Sales Records</h1>
+        <h1 className="text-2xl font-bold">Sales Transactions</h1>
         <div className="flex space-x-2 items-center">
           <button
             onClick={() => setShowDateRangeModal(true)}
@@ -309,7 +349,10 @@ const Sales = () => {
               <th className="py-2 px-4 border-b text-center">Issuance No.</th>
               <th className="py-2 px-4 border-b text-center">OR Number</th>
               <th className="py-2 px-4 border-b text-center">Issued To</th>
+              <th className="py-2 px-4 border-b text-center">Student No.</th>
+              <th className="py-2 px-4 border-b text-center">Course/Section</th>
               <th className="py-2 px-4 border-b text-center">Item Code</th>
+              <th className="py-2 px-4 border-b text-center">Item Count</th>
               <th className="py-2 px-4 border-b text-center">
                 Item Description
               </th>
@@ -330,22 +373,31 @@ const Sales = () => {
                     {new Date(record.last_modified).toLocaleDateString()}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
+                    {record ? record.issuance_no : "N/A"}
+                  </td>
+                  <td className="py-2 px-4 border-b text-center">
                     {record ? record.cr_number : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
                     {record ? record.student_name : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
-                    {record ? record.item_desc : "N/A"}
+                    {record ? record.student_id: "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
-                    {record ? record.remarks : "N/A"}
-                  </td>
-                  <td className="py-2 px-4 border-b text-center">
-                    {product ? product.product_name : "N/A"}
+                    {record ? record.course_and_section: "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
                     {record ? record.product_id : "N/A"}
+                  </td>
+                  <td className="py-2 px-4 border-b text-center">
+                    {record ? record.item_count : "N/A"}
+                  </td>
+                  <td className="py-2 px-4 border-b text-center">
+                    {record ? record.item_desc : "N/A"}
+                  </td>
+                  <td className="py-2 px-4 border-b text-center">
+                    {product ? product.product_name : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
                     ₱{record ? record.amount.toFixed(2) : "N/A"}
@@ -382,6 +434,16 @@ const Sales = () => {
                         >
                           Delete
                         </button>
+                        <button
+                          onClick={() => {
+                            fetchRecordsByOR(record.cr_number);
+                            setShowPrintSlip(true);
+                            toggleActionsMenu(record.id);
+                          }}
+                          className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-center"
+                        >
+                          Print Slip
+                        </button>
                       </div>
                     )}
                   </td>
@@ -390,6 +452,7 @@ const Sales = () => {
             })}
           </tbody>
         </table>
+        <div className="mb-16"></div>
       </div>
 
       <AddSalesModal
@@ -411,6 +474,13 @@ const Sales = () => {
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         onDelete={handleDelete}
+      />
+
+      <PrintSlipModal
+        isOpen={showPrintSlip}
+        onClose={() => setShowPrintSlip(false)}
+        selectedRecord={recordsByOR}
+        inventoryData={inventoryRecords}
       />
     </div>
   );

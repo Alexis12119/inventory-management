@@ -7,6 +7,8 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
   const [addStudentName, setAddStudentName] = useState("");
   const [addDescription, setAddDescription] = useState("");
   const [addORNumber, setAddORNumber] = useState("");
+  const [addStudentId, setStudentId] = useState("");
+  const [addCourseAndSection, setCourseAndSection] = useState("");
 
   if (!isOpen) return null;
 
@@ -31,6 +33,20 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
           value={addStudentName}
           onChange={(e) => setAddStudentName(e.target.value)}
           placeholder="Issued to"
+          className="border p-2 mb-2 w-full"
+        />
+        <input
+          type="text"
+          value={addStudentId}
+          onChange={(e) => setStudentId(e.target.value)}
+          placeholder="Student ID"
+          className="border p-2 mb-2 w-full"
+        />
+        <input
+          type="text"
+          value={addCourseAndSection}
+          onChange={(e) => setCourseAndSection(e.target.value)}
+          placeholder="Course and Section"
           className="border p-2 mb-2 w-full"
         />
         <input
@@ -68,6 +84,8 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
                 newProductId,
                 newItemCount,
                 addStudentName,
+                addStudentId,
+                addCourseAndSection,
                 addRemarks,
                 addDescription,
                 addORNumber,

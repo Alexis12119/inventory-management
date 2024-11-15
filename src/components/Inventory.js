@@ -12,6 +12,8 @@ const Inventory = () => {
   const [editItemCount, setEditItemCount] = useState(null);
   const [editPrice, setEditPrice] = useState(null);
   const [editName, setEditName] = useState("");
+  const [newItemId, setNewItemId] = useState("");
+  const [newRemarks, setNewRemarks] = useState("");
   const [newItemName, setNewItemName] = useState("");
   const [newItemCount, setNewItemCount] = useState("");
   const [newItemPrice, setNewItemPrice] = useState("");
@@ -33,15 +35,19 @@ const Inventory = () => {
     }
 
     await supabase.from("inventory").insert({
+      id: newItemId,
       product_name: newItemName,
       item_count: parseInt(newItemCount),
       price: parseFloat(newItemPrice),
+      remarks: newRemarks,
     });
 
     refreshData();
+    setNewItemId("");
     setNewItemName("");
     setNewItemCount("");
     setNewItemPrice("");
+    setNewRemarks("");
     setShowAddForm(false);
   };
 
@@ -178,6 +184,13 @@ const Inventory = () => {
             <h2 className="text-xl font-bold mb-4">Add Inventory Item</h2>
             <input
               type="text"
+              value={newItemId}
+              onChange={(e) => setNewItemId(e.target.value)}
+              placeholder="Item ID"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="text"
               value={newItemName}
               onChange={(e) => setNewItemName(e.target.value)}
               placeholder="Item Name"
@@ -200,8 +213,8 @@ const Inventory = () => {
             />
             <input
               type="text"
-              value={editRemarks}
-              onChange={(e) => setRemarks(e.target.value)}
+              value={newRemarks}
+              onChange={(e) => setNewRemarks(e.target.value)}
               placeholder="Remarks"
               className="border p-2 mb-2 w-full"
             />

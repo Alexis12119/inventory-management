@@ -54,7 +54,7 @@ const Maintenance = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Maintenance</h1>
+        <h1 className="text-2xl font-bold">Maintenance Scheduling</h1>
         <button
           onClick={() => setShowAddForm(true)}
           className="bg-blue-500 text-white py-2 px-4 rounded"

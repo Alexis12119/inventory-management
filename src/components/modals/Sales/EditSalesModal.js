@@ -12,6 +12,8 @@ const EditSalesModal = ({
   const [editStudentName, setEditStudentName] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [editORNumber, setEditORNumber] = useState("");
+  const [editStudentId, setEditStudentId] = useState("");
+  const [editCourseAndSection, setEditCourseAndSection] = useState("");
 
   useEffect(() => {
     if (item) {
@@ -20,6 +22,8 @@ const EditSalesModal = ({
       setRemarks(item.remarks || "");
       setEditDescription(item.item_desc || "");
       setEditORNumber(item.cr_number || "");
+      setEditStudentId(item.student_id || "");
+      setEditCourseAndSection(item.course_and_section || "");
     }
   }, [item]);
 
@@ -39,12 +43,25 @@ const EditSalesModal = ({
           placeholder="Item Count"
           className="border p-2 mb-2 w-full"
         />
-    
         <input
           type="text"
           value={editStudentName}
           onChange={(e) => setEditStudentName(e.target.value)}
           placeholder="Issued to"
+          className="border p-2 mb-2 w-full"
+        />
+        <input
+          type="text"
+          value={editStudentId}
+          onChange={(e) => setEditStudentId(e.target.value)}
+          placeholder="Student ID"
+          className="border p-2 mb-2 w-full"
+        />
+        <input
+          type="text"
+          value={editCourseAndSection}
+          onChange={(e) => setEditCourseAndSection(e.target.value)}
+          placeholder="Course and Section"
           className="border p-2 mb-2 w-full"
         />
         <input
@@ -75,6 +92,8 @@ const EditSalesModal = ({
                 item.id,
                 editItemCount,
                 editStudentName,
+                editStudentId,
+                editCourseAndSection,
                 editRemarks,
                 editDescription,
                 editORNumber,

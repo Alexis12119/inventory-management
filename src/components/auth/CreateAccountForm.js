@@ -12,7 +12,7 @@ const CreateAccountForm = () => {
   const handleCreateAccount = async () => {
     const { error } = await supabase.auth.signUp({ email, password });
     if (error) alert(error.message);
-    else alert("Creating account successful. Please check your email.");
+    else alert("Account created sucessfully. Please check your email account to confirm.");
   };
 
   return (
