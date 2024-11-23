@@ -13,6 +13,20 @@ const Inventory = () => {
   const [editName, setEditName] = useState("");
   const [newItemId, setNewItemId] = useState("");
   const [newRemarks, setNewRemarks] = useState("");
+  const [newDescription, setNewDescription] = useState("");
+  const [newBrand, setNewBrand] = useState("");
+  const [newModel, setNewModel] = useState("");
+  const [newSerial, setNewSerial] = useState("");
+  const [newMajorCategory, setNewMajorCategory] = useState("");
+  const [newMinorCategory, setNewMinorCategory] = useState("");
+  const [newLocation, setNewLocation] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [editBrand, setEditBrand] = useState("");
+  const [editModel, setEditModel] = useState("");
+  const [editSerial, setEditSerial] = useState("");
+  const [editMajorCategory, setEditMajorCategory] = useState("");
+  const [editMinorCategory, setEditMinorCategory] = useState("");
+  const [editLocation, setEditLocation] = useState("");
   const [newItemName, setNewItemName] = useState("");
   const [newItemCount, setNewItemCount] = useState("");
   const [newItemPrice, setNewItemPrice] = useState("");
@@ -97,6 +111,13 @@ const Inventory = () => {
     const { error: insertError } = await supabase.from("inventory").insert({
       id: newItemId,
       product_name: newItemName,
+      item_description: newDescription,
+      brand: newBrand,
+      model: newModel,
+      serial: newSerial,
+      major_category: newMajorCategory,
+      minor_category: newMinorCategory,
+      location: newLocation,
       item_count: parseInt(newItemCount),
       price: parseFloat(newItemPrice),
       remarks: newRemarks,
@@ -113,6 +134,13 @@ const Inventory = () => {
     setNewItemCount("");
     setNewItemPrice("");
     setNewRemarks("");
+    setNewDescription("");
+    setNewBrand("");
+    setNewModel("");
+    setNewSerial("");
+    setNewMajorCategory("");
+    setNewMinorCategory("");
+    setNewLocation("");
     setShowAddForm(false);
   };
 
@@ -122,6 +150,13 @@ const Inventory = () => {
     setRemarks(record.remarks);
     setEditPrice(record.price);
     setEditName(record.product_name);
+    setEditDescription(record.item_description);
+    setEditBrand(record.brand);
+    setEditModel(record.model);
+    setEditSerial(record.serial);
+    setEditMajorCategory(record.major_category);
+    setEditMinorCategory(record.minor_category);
+    setEditLocation(record.location);
     setShowEditForm(true);
   };
 
@@ -159,6 +194,13 @@ const Inventory = () => {
         const { error: insertError } = await supabase.from("inventory").insert({
           id: editItemId,
           remarks: editRemarks,
+          item_description: editDescription,
+          brand: editBrand,
+          model: editModel,
+          serial: editSerial,
+          major_category: editMajorCategory,
+          minor_category: editMinorCategory,
+          location: editLocation,
           product_name: editName,
           price: parseFloat(editPrice),
         });
@@ -184,6 +226,13 @@ const Inventory = () => {
           .from("inventory")
           .update({
             remarks: editRemarks,
+            item_description: editDescription,
+            brand: editBrand,
+            model: editModel,
+            serial: editSerial,
+            major_category: editMajorCategory,
+            minor_category: editMinorCategory,
+            location: editLocation,
             product_name: editName,
             price: parseFloat(editPrice),
           })
@@ -250,7 +299,7 @@ const Inventory = () => {
 
       {showAddForm && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="bg-white p-4 rounded w-80 max-w-xs">
+          <div className="bg-white p-4 rounded w-95 max-w-lg">
             <h2 className="text-xl font-bold mb-4">Add Inventory Item</h2>
             <input
               type="text"
@@ -262,29 +311,78 @@ const Inventory = () => {
             <input
               type="text"
               value={newItemName}
-              onChange={(e) => setNewItemCount(e.target.value)}
-              placeholder="Item Count"
-              className="border p-2 mb-2 w-full"
-            />
-            <input
-              type="text"
-              value={newItemName}
               onChange={(e) => setNewItemName(e.target.value)}
               placeholder="Item Name"
               className="border p-2 mb-2 w-full"
             />
             <input
               type="text"
+              value={newDescription}
+              onChange={(e) => setNewDescription(e.target.value)}
+              placeholder="Item Description"
+              className="border p-2 mb-2 w-full"
+            />
+        <input
+              type="text"
+              value={newBrand}
+              onChange={(e) => setNewBrand(e.target.value)}
+              placeholder="Brand"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="text"
+              value={newModel}
+              onChange={(e) => setNewModel(e.target.value)}
+              placeholder="Model"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="text"
+              value={newSerial}
+              onChange={(e) => setNewSerial(e.target.value)}
+              placeholder="Serial"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="text"
+              value={newMajorCategory}
+              onChange={(e) => setNewMajorCategory(e.target.value)}
+              placeholder="Major Category"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="text"
+              value={newMinorCategory}
+              onChange={(e) => setNewMinorCategory(e.target.value)}
+              placeholder="Minor Category"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="text"
+              value={newLocation}
+              onChange={(e) => setNewLocation(e.target.value)}
+              placeholder="Location"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="text"
+              value={newItemCount}
+              onChange={(e) => setNewItemCount(e.target.value)}
+              placeholder="Quantity"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="text"
               value={newItemPrice}
               onChange={(e) => setNewItemPrice(e.target.value)}
-              placeholder="Price"
+              placeholder="Unit Cost"
               className="border p-2 mb-2 w-full"
             />
             <input
               type="text"
               value={newRemarks}
               onChange={(e) => setNewRemarks(e.target.value)}
-              placeholder="Remarks"
+              placeholder="Item Condition"
               className="border p-2 mb-2 w-full"
             />
             <button
@@ -322,16 +420,65 @@ const Inventory = () => {
             />
             <input
               type="text"
+              value={editDescription}
+              onChange={(e) => setEditDescription(e.target.value)}
+              placeholder="Item Description"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="text"
+              value={editBrand}
+              onChange={(e) => setEditBrand(e.target.value)}
+              placeholder="Brand"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="text"
+              value={editModel}
+              onChange={(e) => setEditModel(e.target.value)}
+              placeholder="Model"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="text"
+              value={editSerial}
+              onChange={(e) => setEditSerial(e.target.value)}
+              placeholder="Serial"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="text"
+              value={editMajorCategory}
+              onChange={(e) => setEditMajorCategory(e.target.value)}
+              placeholder="Major Category"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="text"
+              value={editMinorCategory}
+              onChange={(e) => setEditMinorCategory(e.target.value)}
+              placeholder="Minor Category"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="text"
+              value={editLocation}
+              onChange={(e) => setEditLocation(e.target.value)}
+              placeholder="Location"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="text"
               value={editPrice}
               onChange={(e) => setEditPrice(e.target.value)}
-              placeholder="Price"
+              placeholder="Unit Cost"
               className="border p-2 mb-2 w-full"
             />
             <input
               type="text"
               value={editRemarks}
               onChange={(e) => setRemarks(e.target.value)}
-              placeholder="Remarks"
+              placeholder="Item Condition"
               className="border p-2 mb-2 w-full"
             />
             <button
@@ -359,10 +506,19 @@ const Inventory = () => {
             <tr className="bg-gray-200 text-gray-700">
               <th className="py-2 px-4 border-b text-center">Item ID</th>
               <th className="py-2 px-4 border-b text-center">Item Name</th>
-              <th className="py-2 px-4 border-b text-center">Item Count</th>
-              <th className="py-2 px-4 border-b text-center">Price</th>
+              <th className="py-2 px-4 border-b text-center">
+                Item Description
+              </th>
+              <th className="py-2 px-4 border-b text-center">Brand</th>
+              <th className="py-2 px-4 border-b text-center">Model</th>
+              <th className="py-2 px-4 border-b text-center">Serial</th>
+              <th className="py-2 px-4 border-b text-center">Major Category</th>
+              <th className="py-2 px-4 border-b text-center">Minor Category</th>
+              <th className="py-2 px-4 border-b text-center">Location</th>
+              <th className="py-2 px-4 border-b text-center">Quantity</th>
+              <th className="py-2 px-4 border-b text-center">Unit Cost</th>
               <th className="py-2 px-4 border-b text-center">Last Modified</th>
-              <th className="py-2 px-4 border-b text-center">Remarks</th>
+              <th className="py-2 px-4 border-b text-center">Item Condition</th>
               <th className="py-2 px-4 border-b text-center">Actions</th>
             </tr>
           </thead>
@@ -372,6 +528,27 @@ const Inventory = () => {
                 <td className="py-2 px-4 border-b text-center">{record.id}</td>
                 <td className="py-2 px-4 border-b text-center">
                   {record.product_name}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {record.item_description}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {record.brand}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {record.model}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {record.serial}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {record.major_category}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {record.minor_category}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {record.location}
                 </td>
                 <td className="py-2 px-4 border-b text-center">
                   {record.item_count}
