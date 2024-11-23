@@ -10,6 +10,7 @@ import Sales from './components/Sales';
 import Equipments from './components/Equipments';
 import Maintenance from './components/Maintenance';
 import PrivateRoute from './components/PrivateRoute';
+import Dashboard from './components/Dashboard';
 
 const App = () => (
   <Router>
@@ -19,6 +20,7 @@ const App = () => (
         <Route path="/create-account" element={<CreateAccountForm />} />
         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
         <Route path="/reset-password" element={<ResetPasswordForm />} />
+        <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
         <Route path="/equipments" element={<PrivateRoute element={<Equipments />} />} />
         <Route path="/inventory" element={<PrivateRoute element={<Inventory />} />} />
         <Route path="/sales" element={<PrivateRoute element={<Sales />} />} />

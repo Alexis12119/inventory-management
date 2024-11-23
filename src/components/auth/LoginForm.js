@@ -12,7 +12,7 @@ const LoginForm = () => {
   const handleLogin = async () => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) alert(error.message);
-    else navigate("/inventory");
+    else navigate("/dashboard");
   };
 
   return (
