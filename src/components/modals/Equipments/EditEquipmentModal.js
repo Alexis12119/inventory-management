@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 
 const EditEquipmentModal = ({ isOpen, onClose, onEdit, equipment }) => {
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
   const [days_interval, setDaysInterval] = useState("");
 
   useEffect(() => {
     if (equipment) {
       setName(equipment.name || "");
-      setDescription(equipment.description || "");
       setDaysInterval(equipment.days_interval || "");
     }
   }, [equipment]);
@@ -22,7 +20,6 @@ const EditEquipmentModal = ({ isOpen, onClose, onEdit, equipment }) => {
     await onEdit({
       id: equipment.id,
       name,
-      description,
       days_interval,
     });
     onClose();
@@ -37,13 +34,6 @@ const EditEquipmentModal = ({ isOpen, onClose, onEdit, equipment }) => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Equipment Name"
-          className="border p-2 mb-4 w-full"
-        />
-        <input
-          type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Equipment Description"
           className="border p-2 mb-4 w-full"
         />
         <input

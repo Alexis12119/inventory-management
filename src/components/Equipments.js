@@ -83,7 +83,6 @@ const Equipments = () => {
             <tr className="bg-gray-200 text-gray-700">
               <th className="py-2 px-4 border-b text-center">Equipment ID</th>
               <th className="py-2 px-4 border-b text-center">Equipment Name</th>
-              <th className="py-2 px-4 border-b text-center">Equipment Description</th>
               <th className="py-2 px-4 border-b text-center">Days Interval</th>
               <th className="py-2 px-4 border-b text-center">Actions</th>
             </tr>
@@ -93,7 +92,6 @@ const Equipments = () => {
               <tr key={equip.id} className="text-gray-600">
                 <td className="py-2 px-4 border-b text-center">{equip.id}</td>
                 <td className="py-2 px-4 border-b text-center">{equip.name}</td>
-                <td className="py-2 px-4 border-b text-center">{equip.description}</td>
                 <td className="py-2 px-4 border-b text-center">
                   {equip.days_interval}
                 </td>

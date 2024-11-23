@@ -2,12 +2,11 @@ import React, { useState } from "react";
 
 const AddEquipmentModal = ({ isOpen, onClose, onAdd }) => {
   const [name, setName] = useState("");
-  const [description, setNewDescription] = useState("");
   const [daysInterval, setDaysInterval] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onAdd({ name, description: description, days_interval: daysInterval });
+    onAdd({ name, days_interval: daysInterval });
     onClose();
     setName("");
     setDaysInterval("");
@@ -21,10 +20,8 @@ const AddEquipmentModal = ({ isOpen, onClose, onAdd }) => {
         className="absolute inset-0 bg-black opacity-50"
         onClick={onClose}
       ></div>{" "}
-      {/* Overlay for dimming */}
       <div className="bg-white rounded shadow-lg p-8  relative">
         {" "}
-        {/* Make sure to add relative positioning */}
         <h2 className="text-xl font-bold mb-6">Add Equipment</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -33,16 +30,6 @@ const AddEquipmentModal = ({ isOpen, onClose, onAdd }) => {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="border rounded w-full p-3"
-              required
-            />
-          </div>
-          <div className="mb-2">
-            <label className="block mb-2">Equipment Description</label>
-            <input
-              type="text"
-              value={description}
-              onChange={(e) => setNewDescription(e.target.value)}
               className="border rounded w-full p-3"
               required
             />
