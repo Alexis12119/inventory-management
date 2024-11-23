@@ -271,7 +271,7 @@ const Sales = () => {
   return (
     <div className="p-2">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Sales Transactions</h1>
+        <h1 className="text-2xl font-bold">Issuance Transactions Module</h1>
         <div className="flex space-x-2 items-center">
           <button
             onClick={() => setShowDateRangeModal(true)}
