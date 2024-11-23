@@ -60,17 +60,7 @@ const Sidebar = ({ handleLogout }) => {
         </nav>
       </div>
 
-      {/* Bottom buttons */}
       <div className="p-2 pb-8 space-y-4">
-        <button
-          onClick={() => handleNavigation("/create-account")}
-          className="flex items-center py-2 px-2 rounded hover:bg-gray-700 transition-colors duration-200"
-        >
-          <FaUserPlus className="mr-2" />
-          <span className="transition-opacity duration-300 opacity-0 group-hover:opacity-100 w-32">
-            Create Account
-          </span>
-        </button>
         <button
           onClick={handleLogout}
           className="flex items-center py-2 px-2 rounded hover:bg-red-600 transition-colors duration-200"
