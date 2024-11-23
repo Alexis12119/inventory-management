@@ -1,36 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const EditEquipmentModal = ({ isOpen, onClose, onEdit, equipment }) => {
   const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
+  const [days_interval, setDaysInterval] = useState("");
 
   useEffect(() => {
     if (equipment) {
       setName(equipment.name || "");
-      setPrice(equipment.price || "");
+      setDescription(equipment.description || "");
+      setDaysInterval(equipment.days_interval || "");
     }
   }, [equipment]);
 
   const handleEdit = async () => {
-    const nameRegex = /^[A-Za-z\s]+$/;
-
-    if (!nameRegex.test(name)) {
-      alert("Name should contain only letters and spaces.");
-      return;
-    }
-
-    const parsedPrice = parseFloat(price);
-    if (isNaN(parsedPrice) || parsedPrice < 0) {
-      alert("Price should be a valid positive number (integer or float).");
-      return;
-    }
-
     if (!name) {
       alert("Please fill out all fields.");
       return;
     }
 
-    await onEdit({ id: equipment.id, name, price: parsedPrice });
+    await onEdit({
+      id: equipment.id,
+      name,
+      description,
+      days_interval,
+    });
     onClose();
   };
 
@@ -47,9 +41,16 @@ const EditEquipmentModal = ({ isOpen, onClose, onEdit, equipment }) => {
         />
         <input
           type="text"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          placeholder="Price (optional)"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Equipment Description"
+          className="border p-2 mb-4 w-full"
+        />
+        <input
+          type="text"
+          value={days_interval}
+          onChange={(e) => setDaysInterval(e.target.value)}
+          placeholder="Days Interval"
           className="border p-2 mb-4 w-full"
         />
         <button
