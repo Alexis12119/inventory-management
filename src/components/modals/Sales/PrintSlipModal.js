@@ -89,14 +89,14 @@ const PrintSlipModal = ({ isOpen, onClose, selectedRecord, inventoryData }) => {
                   <td>${record.product_id}</td>
                   <td>${record.item_count}</td>
                   <td>${record.item_desc}</td>
-                  <td>₱${record.amount.toFixed(2)}</td>
+                  <td>${record.amount.toFixed(2)}</td>
                 </tr>
               `,
               )
               .join("")}
             <tr class="total-row">
               <td colspan="3">Total Amount</td>
-              <td>₱${grandTotal.toFixed(2)}</td>
+              <td>${grandTotal.toFixed(3)}</td>
             </tr>
             <tr class="total-row">
               <td colspan="3">OR Number</td>

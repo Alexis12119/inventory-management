@@ -57,7 +57,7 @@ const Sales = () => {
     const csvData = [
       [
         "Grand Total:",
-        `₱${grandTotal.toFixed(2)}`,
+        `${grandTotal.toFixed(2)}`,
         "",
         "",
         "",
@@ -404,7 +404,7 @@ const Sales = () => {
                     {product ? product.product_name : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
-                    ₱{record ? record.amount.toFixed(2) : "N/A"}
+                    {record ? record.amount.toFixed(2) : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
                     {record ? record.remarks : "N/A"}

@@ -9,7 +9,6 @@ const Inventory = () => {
   const [editItemId, setEditItemId] = useState(null);
   const [editRemarks, setRemarks] = useState("");
   const [editRecordId, setEditRecordId] = useState(null);
-  const [editItemCount, setEditItemCount] = useState(null);
   const [editPrice, setEditPrice] = useState(null);
   const [editName, setEditName] = useState("");
   const [newItemId, setNewItemId] = useState("");
@@ -22,10 +21,53 @@ const Inventory = () => {
   const [qrCodeData, setQRCodeData] = useState(null);
   const [showEditForm, setShowEditForm] = useState(false);
   const [showActionsMenu, setShowActionsMenu] = useState(null);
+  const [showAddStockModal, setShowAddStockModal] = useState(false);
+  const [currentRecordId, setCurrentRecordId] = useState(null);
+  const [additionalStock, setAdditionalStock] = useState("");
+  // Search state
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Filtered inventory records based on search term
+  const filteredRecords = inventoryRecords.filter((record) =>
+    `${record.id} ${record.product_name}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase()),
+  );
+
+  const handleAddStockClick = (recordId) => {
+    setCurrentRecordId(recordId);
+    setAdditionalStock("");
+    setShowAddStockModal(true);
+  };
+
+  const handleAddStock = async (record) => {
+    if (!additionalStock || parseInt(additionalStock) <= 0) {
+      alert("Please enter a valid stock quantity.");
+      return;
+    }
+
+    try {
+      // Update the stock count in the database
+      const { data, error } = await supabase
+        .from("inventory")
+        .update({
+          item_count: parseInt(additionalStock),
+        })
+        .eq("id", currentRecordId);
+
+      if (error) throw error;
+
+      alert("Stock added successfully!");
+      refreshData(); // Refresh the inventory data
+      setShowAddStockModal(false);
+    } catch (error) {
+      alert("Error adding stock: " + error.message);
+    }
+  };
 
   const handleAdd = async () => {
-    if (!newItemName || !newItemCount || !newItemPrice) {
-      alert("Please enter item name, count, and price.");
+    if (!newItemId || !newItemName || !newItemCount || !newItemPrice) {
+      alert("Please enter item ID, name, count, and price.");
       return;
     }
 
@@ -34,13 +76,36 @@ const Inventory = () => {
       return;
     }
 
-    await supabase.from("inventory").insert({
+    // Check if the Item ID already exists
+    const { data: existingItem, error: checkError } = await supabase
+      .from("inventory")
+      .select("id")
+      .eq("id", newItemId)
+      .single();
+
+    if (checkError && checkError.code !== "PGRST116") {
+      alert("Error checking item ID: " + checkError.message);
+      return;
+    }
+
+    if (existingItem) {
+      alert("Item ID already exists. Please choose a different ID.");
+      return;
+    }
+
+    // Proceed with adding the new item
+    const { error: insertError } = await supabase.from("inventory").insert({
       id: newItemId,
       product_name: newItemName,
       item_count: parseInt(newItemCount),
       price: parseFloat(newItemPrice),
       remarks: newRemarks,
     });
+
+    if (insertError) {
+      alert("Error adding item: " + insertError.message);
+      return;
+    }
 
     refreshData();
     setNewItemId("");
@@ -55,7 +120,6 @@ const Inventory = () => {
     setEditRecordId(record.id);
     setEditItemId(record.id);
     setRemarks(record.remarks);
-    setEditItemCount(record.item_count);
     setEditPrice(record.price);
     setEditName(record.product_name);
     setShowEditForm(true);
@@ -66,16 +130,12 @@ const Inventory = () => {
   };
 
   const handleSave = async (recordId) => {
-    if (editItemCount === null || editPrice === null || !editName) {
+    if (editPrice === null || !editName) {
       alert("Please enter item name, item count, and price.");
       return;
     }
 
-    if (parseInt(editItemCount) < 0) {
-      alert("Item count cannot be negative.");
-      return;
-    }
-
+    // Check if the edited Item ID already exists in the database but belongs to a different record
     const { data: existingItem, error: checkError } = await supabase
       .from("inventory")
       .select()
@@ -94,12 +154,12 @@ const Inventory = () => {
     }
 
     try {
+      // If `editItemId` differs from the original `recordId`, handle ID update
       if (editItemId !== recordId) {
         const { error: insertError } = await supabase.from("inventory").insert({
           id: editItemId,
           remarks: editRemarks,
           product_name: editName,
-          item_count: parseInt(editItemCount),
           price: parseFloat(editPrice),
         });
 
@@ -119,12 +179,12 @@ const Inventory = () => {
 
         if (deleteError) throw deleteError;
       } else {
+        // If the ID remains the same, just update other fields
         const { error: updateError } = await supabase
           .from("inventory")
           .update({
             remarks: editRemarks,
             product_name: editName,
-            item_count: parseInt(editItemCount),
             price: parseFloat(editPrice),
           })
           .eq("id", recordId);
@@ -132,6 +192,7 @@ const Inventory = () => {
         if (updateError) throw updateError;
       }
 
+      // Refresh data and close the edit form
       refreshData();
       setEditRecordId(null);
       setShowEditForm(false);
@@ -170,12 +231,21 @@ const Inventory = () => {
     <div className="p-2">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Inventory</h1>
-        <button
-          onClick={() => setShowAddForm(true)}
-          className="bg-blue-500 text-white py-2 px-4 rounded"
-        >
-          Add Item
-        </button>
+        <div className="flex items-center space-x-2">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search..."
+            className="border p-2 rounded w-64"
+          />
+          <button
+            onClick={() => setShowAddForm(true)}
+            className="bg-blue-500 text-white py-2 px-4 rounded"
+          >
+            Add Item
+          </button>
+        </div>
       </div>
 
       {showAddForm && (
@@ -192,20 +262,19 @@ const Inventory = () => {
             <input
               type="text"
               value={newItemName}
-              onChange={(e) => setNewItemName(e.target.value)}
-              placeholder="Item Name"
-              className="border p-2 mb-2 w-full"
-            />
-            <input
-              type="number"
-              value={newItemCount}
               onChange={(e) => setNewItemCount(e.target.value)}
               placeholder="Item Count"
               className="border p-2 mb-2 w-full"
             />
             <input
-              type="number"
-              step="0.01"
+              type="text"
+              value={newItemName}
+              onChange={(e) => setNewItemName(e.target.value)}
+              placeholder="Item Name"
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="text"
               value={newItemPrice}
               onChange={(e) => setNewItemPrice(e.target.value)}
               placeholder="Price"
@@ -252,15 +321,7 @@ const Inventory = () => {
               className="border p-2 mb-2 w-full"
             />
             <input
-              type="number"
-              value={editItemCount}
-              onChange={(e) => setEditItemCount(e.target.value)}
-              placeholder="Item Count"
-              className="border p-2 mb-2 w-full"
-            />
-            <input
-              type="number"
-              step="0.01"
+              type="text"
               value={editPrice}
               onChange={(e) => setEditPrice(e.target.value)}
               placeholder="Price"
@@ -306,7 +367,7 @@ const Inventory = () => {
             </tr>
           </thead>
           <tbody>
-            {inventoryRecords.map((record) => (
+            {filteredRecords.map((record) => (
               <tr key={record.id} className="text-gray-600">
                 <td className="py-2 px-4 border-b text-center">{record.id}</td>
                 <td className="py-2 px-4 border-b text-center">
@@ -365,6 +426,15 @@ const Inventory = () => {
                       >
                         Generate QR
                       </button>
+                      <button
+                        onClick={() => {
+                          handleAddStockClick(record.id);
+                          toggleActionsMenu(record.id);
+                        }}
+                        className="block w-full px-4 py-2 text-gray-800 hover:bg-gray-200"
+                      >
+                        Add Stock
+                      </button>
                     </div>
                   )}
                 </td>
@@ -382,6 +452,32 @@ const Inventory = () => {
           name={qrCodeData.product_name}
           onDownload={handleDownload}
         />
+      )}
+      {showAddStockModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+          <div className="bg-white p-4 rounded w-80 max-w-xs">
+            <h2 className="text-xl font-bold mb-4">Add Stock</h2>
+            <input
+              type="number"
+              value={additionalStock}
+              onChange={(e) => setAdditionalStock(e.target.value)}
+              placeholder="Stock Quantity"
+              className="border p-2 mb-4 w-full"
+            />
+            <button
+              onClick={handleAddStock}
+              className="bg-blue-500 text-white py-2 px-4 rounded mr-2"
+            >
+              Add
+            </button>
+            <button
+              onClick={() => setShowAddStockModal(false)}
+              className="bg-red-500 text-white py-2 px-4 rounded"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
