@@ -40,7 +40,7 @@ const Inventory = () => {
     setShowAddStockModal(true);
   };
 
-  const handleAddStock = async (record) => {
+  const handleAddStock = async () => {
     if (!additionalStock || parseInt(additionalStock) <= 0) {
       alert("Please enter a valid stock quantity.");
       return;
