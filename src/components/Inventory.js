@@ -635,7 +635,7 @@ const Inventory = () => {
           <div className="bg-white p-4 rounded w-80 max-w-xs">
             <h2 className="text-xl font-bold mb-4">Add Stock</h2>
             <input
-              type="number"
+              type="text"
               value={additionalStock}
               onChange={(e) => setAdditionalStock(e.target.value)}
               placeholder="Stock Quantity"

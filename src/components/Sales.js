@@ -100,7 +100,7 @@ const Sales = () => {
           record ? record.item_count : "N/A", // Item Count
           record.item_desc || "N/A", // Item Description
           product ? product.product_name : "N/A", // Item Type (assumed from product name)
-          record.amount ? "₱ " + record.amount.toFixed(2) : "N/A", // Amount
+          record.amount ? record.amount.toFixed(2) : "N/A", // Amount
           record.remarks || "N/A", // Remarks
         ];
       }),

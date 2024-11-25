@@ -36,7 +36,7 @@ const Sidebar = ({ handleLogout }) => {
           >
             <FaChartLine className="mr-2" />
             <span className="transition-opacity duration-300 opacity-0 group-hover:opacity-100">
-              Sales
+              Issuance Transactions
             </span>
           </button>
           <button
