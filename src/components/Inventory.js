@@ -317,65 +317,16 @@ const Inventory = () => {
             />
             <input
               type="text"
-              value={newDescription}
-              onChange={(e) => setNewDescription(e.target.value)}
-              placeholder="Item Description"
-              className="border p-2 mb-2 w-full"
-            />
-        <input
-              type="text"
-              value={newBrand}
-              onChange={(e) => setNewBrand(e.target.value)}
-              placeholder="Brand"
-              className="border p-2 mb-2 w-full"
-            />
-            <input
-              type="text"
-              value={newModel}
-              onChange={(e) => setNewModel(e.target.value)}
-              placeholder="Model"
-              className="border p-2 mb-2 w-full"
-            />
-            <input
-              type="text"
-              value={newSerial}
-              onChange={(e) => setNewSerial(e.target.value)}
-              placeholder="Serial"
-              className="border p-2 mb-2 w-full"
-            />
-            <input
-              type="text"
-              value={newMajorCategory}
-              onChange={(e) => setNewMajorCategory(e.target.value)}
-              placeholder="Major Category"
-              className="border p-2 mb-2 w-full"
-            />
-            <input
-              type="text"
-              value={newMinorCategory}
-              onChange={(e) => setNewMinorCategory(e.target.value)}
-              placeholder="Minor Category"
-              className="border p-2 mb-2 w-full"
-            />
-            <input
-              type="text"
-              value={newLocation}
-              onChange={(e) => setNewLocation(e.target.value)}
-              placeholder="Location"
-              className="border p-2 mb-2 w-full"
-            />
-            <input
-              type="text"
               value={newItemCount}
               onChange={(e) => setNewItemCount(e.target.value)}
-              placeholder="Quantity"
+              placeholder="Item Count"
               className="border p-2 mb-2 w-full"
             />
             <input
               type="text"
               value={newItemPrice}
               onChange={(e) => setNewItemPrice(e.target.value)}
-              placeholder="Unit Cost"
+              placeholder="Price"
               className="border p-2 mb-2 w-full"
             />
             <input
@@ -420,65 +371,16 @@ const Inventory = () => {
             />
             <input
               type="text"
-              value={editDescription}
-              onChange={(e) => setEditDescription(e.target.value)}
-              placeholder="Item Description"
-              className="border p-2 mb-2 w-full"
-            />
-            <input
-              type="text"
-              value={editBrand}
-              onChange={(e) => setEditBrand(e.target.value)}
-              placeholder="Brand"
-              className="border p-2 mb-2 w-full"
-            />
-            <input
-              type="text"
-              value={editModel}
-              onChange={(e) => setEditModel(e.target.value)}
-              placeholder="Model"
-              className="border p-2 mb-2 w-full"
-            />
-            <input
-              type="text"
-              value={editSerial}
-              onChange={(e) => setEditSerial(e.target.value)}
-              placeholder="Serial"
-              className="border p-2 mb-2 w-full"
-            />
-            <input
-              type="text"
-              value={editMajorCategory}
-              onChange={(e) => setEditMajorCategory(e.target.value)}
-              placeholder="Major Category"
-              className="border p-2 mb-2 w-full"
-            />
-            <input
-              type="text"
-              value={editMinorCategory}
-              onChange={(e) => setEditMinorCategory(e.target.value)}
-              placeholder="Minor Category"
-              className="border p-2 mb-2 w-full"
-            />
-            <input
-              type="text"
-              value={editLocation}
-              onChange={(e) => setEditLocation(e.target.value)}
-              placeholder="Location"
-              className="border p-2 mb-2 w-full"
-            />
-            <input
-              type="text"
               value={editPrice}
               onChange={(e) => setEditPrice(e.target.value)}
-              placeholder="Unit Cost"
+              placeholder="Price"
               className="border p-2 mb-2 w-full"
             />
             <input
               type="text"
               value={editRemarks}
               onChange={(e) => setRemarks(e.target.value)}
-              placeholder="Item Condition"
+              placeholder="Remarks"
               className="border p-2 mb-2 w-full"
             />
             <button
@@ -506,19 +408,10 @@ const Inventory = () => {
             <tr className="bg-gray-200 text-gray-700">
               <th className="py-2 px-4 border-b text-center">Item ID</th>
               <th className="py-2 px-4 border-b text-center">Item Name</th>
-              <th className="py-2 px-4 border-b text-center">
-                Item Description
-              </th>
-              <th className="py-2 px-4 border-b text-center">Brand</th>
-              <th className="py-2 px-4 border-b text-center">Model</th>
-              <th className="py-2 px-4 border-b text-center">Serial</th>
-              <th className="py-2 px-4 border-b text-center">Major Category</th>
-              <th className="py-2 px-4 border-b text-center">Minor Category</th>
-              <th className="py-2 px-4 border-b text-center">Location</th>
-              <th className="py-2 px-4 border-b text-center">Quantity</th>
-              <th className="py-2 px-4 border-b text-center">Unit Cost</th>
+              <th className="py-2 px-4 border-b text-center">Item Count</th>
+              <th className="py-2 px-4 border-b text-center">Price</th>
               <th className="py-2 px-4 border-b text-center">Last Modified</th>
-              <th className="py-2 px-4 border-b text-center">Item Condition</th>
+              <th className="py-2 px-4 border-b text-center">Remarks</th>
               <th className="py-2 px-4 border-b text-center">Actions</th>
             </tr>
           </thead>
@@ -528,27 +421,6 @@ const Inventory = () => {
                 <td className="py-2 px-4 border-b text-center">{record.id}</td>
                 <td className="py-2 px-4 border-b text-center">
                   {record.product_name}
-                </td>
-                <td className="py-2 px-4 border-b text-center">
-                  {record.item_description}
-                </td>
-                <td className="py-2 px-4 border-b text-center">
-                  {record.brand}
-                </td>
-                <td className="py-2 px-4 border-b text-center">
-                  {record.model}
-                </td>
-                <td className="py-2 px-4 border-b text-center">
-                  {record.serial}
-                </td>
-                <td className="py-2 px-4 border-b text-center">
-                  {record.major_category}
-                </td>
-                <td className="py-2 px-4 border-b text-center">
-                  {record.minor_category}
-                </td>
-                <td className="py-2 px-4 border-b text-center">
-                  {record.location}
                 </td>
                 <td className="py-2 px-4 border-b text-center">
                   {record.item_count}
