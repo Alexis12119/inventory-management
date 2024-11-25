@@ -23,7 +23,7 @@ const Equipments = () => {
   };
 
   const handleEdit = async (data) => {
-    const { id, name} = data;
+    const { id, name } = data;
 
     const { error } = await supabase
       .from("equipments")
@@ -83,6 +83,19 @@ const Equipments = () => {
             <tr className="bg-gray-200 text-gray-700">
               <th className="py-2 px-4 border-b text-center">Equipment ID</th>
               <th className="py-2 px-4 border-b text-center">Equipment Name</th>
+              <th className="py-2 px-4 border-b text-center">
+                Equipment Description
+              </th>
+              <th className="py-2 px-4 border-b text-center">Brand</th>
+              <th className="py-2 px-4 border-b text-center">Model</th>
+              <th className="py-2 px-4 border-b text-center">Serial</th>
+              <th className="py-2 px-4 border-b text-center">Major Category</th>
+              <th className="py-2 px-4 border-b text-center">Minor Category</th>
+              <th className="py-2 px-4 border-b text-center">Quantity</th>
+              <th className="py-2 px-4 border-b text-center">OUM</th>
+              <th className="py-2 px-4 border-b text-center">Unit Cost</th>
+              <th className="py-2 px-4 border-b text-center">Location</th>
+              <th className="py-2 px-4 border-b text-center">Condition</th>
               <th className="py-2 px-4 border-b text-center">Days Interval</th>
               <th className="py-2 px-4 border-b text-center">Actions</th>
             </tr>
@@ -92,6 +105,37 @@ const Equipments = () => {
               <tr key={equip.id} className="text-gray-600">
                 <td className="py-2 px-4 border-b text-center">{equip.id}</td>
                 <td className="py-2 px-4 border-b text-center">{equip.name}</td>
+                <td className="py-2 px-4 border-b text-center">
+                  {equip.description}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {equip.brand}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {equip.model}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {equip.serial}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {equip.major_category}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {equip.minor_category}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {equip.quantity}
+                </td>
+                <td className="py-2 px-4 border-b text-center">{equip.oum}</td>
+                <td className="py-2 px-4 border-b text-center">
+                  {equip.unit_cost}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {equip.location}
+                </td>
+                <td className="py-2 px-4 border-b text-center">
+                  {equip.condition}
+                </td>
                 <td className="py-2 px-4 border-b text-center">
                   {equip.days_interval}
                 </td>
