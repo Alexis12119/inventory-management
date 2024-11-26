@@ -1,8 +1,153 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 import useSupabaseData from "../hooks/useSupabaseData";
 import QRCodeModal from "./modals/QRCodeModal.js";
 import { supabase } from "./auth/supabaseClient";
 import html2canvas from "html2canvas";
+
+const InventorySearch = ({ 
+  searchTerm, 
+  setSearchTerm, 
+  inventoryRecords 
+}) => {
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
+  const inputRef = useRef(null);
+  const suggestionRef = useRef(null);
+
+  // Generate unique suggestion list from inventory records
+  const generateSuggestions = () => {
+    // Combine unique product names and IDs
+    const uniqueSuggestions = [
+      ...new Set([
+        ...inventoryRecords.map(record => record.product_name),
+        ...inventoryRecords.map(record => record.id)
+      ])
+    ];
+
+    return uniqueSuggestions
+      .filter(suggestion => 
+        suggestion.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .slice(0, 5); // Limit to 5 suggestions
+  };
+
+  // Handle search input changes
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    
+    // Generate and show suggestions if input is not empty
+    if (value.trim()) {
+      const filteredSuggestions = generateSuggestions();
+      setSuggestions(filteredSuggestions);
+      setShowSuggestions(true);
+      setActiveSuggestionIndex(-1);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  // Handle keyboard navigation
+  const handleKeyDown = (e) => {
+    if (!showSuggestions) return;
+
+    switch(e.key) {
+      case 'Tab':
+        e.preventDefault();
+        
+        // Cycle through suggestions
+        const newIndex = e.shiftKey 
+          ? (activeSuggestionIndex > 0 ? activeSuggestionIndex - 1 : suggestions.length - 1)
+          : (activeSuggestionIndex < suggestions.length - 1 ? activeSuggestionIndex + 1 : 0);
+        
+        setActiveSuggestionIndex(newIndex);
+        
+        // Update search term with the active suggestion
+        if (suggestions[newIndex]) {
+          setSearchTerm(suggestions[newIndex]);
+        }
+        break;
+
+      case 'Enter':
+        if (activeSuggestionIndex >= 0 && suggestions[activeSuggestionIndex]) {
+          setSearchTerm(suggestions[activeSuggestionIndex]);
+          setShowSuggestions(false);
+        }
+        break;
+
+      case 'Escape':
+        setShowSuggestions(false);
+        break;
+    }
+  };
+
+  // Handle suggestion selection
+  const handleSuggestionClick = (suggestion) => {
+    setSearchTerm(suggestion);
+    setShowSuggestions(false);
+    setActiveSuggestionIndex(-1);
+  };
+
+  // Handle clicks outside of input and suggestions
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        inputRef.current && 
+        !inputRef.current.contains(event.target) &&
+        suggestionRef.current && 
+        !suggestionRef.current.contains(event.target)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <div className="relative">
+      <input
+        ref={inputRef}
+        type="text"
+        value={searchTerm}
+        onChange={handleSearchChange}
+        onKeyDown={handleKeyDown}
+        onFocus={() => {
+          if (searchTerm.trim()) {
+            const filteredSuggestions = generateSuggestions();
+            setSuggestions(filteredSuggestions);
+            setShowSuggestions(true);
+          }
+        }}
+        placeholder="Search... (Tab/Shift+Tab to cycle suggestions)"
+        className="border p-2 rounded w-64"
+      />
+      {showSuggestions && suggestions.length > 0 && (
+        <ul 
+          ref={suggestionRef}
+          className="absolute z-10 w-64 bg-white border border-gray-300 rounded mt-1 shadow-lg"
+        >
+          {suggestions.map((suggestion, index) => (
+            <li
+              key={index}
+              onClick={() => handleSuggestionClick(suggestion)}
+              className={`p-2 hover:bg-gray-100 cursor-pointer ${
+                index === activeSuggestionIndex ? 'bg-gray-200' : ''
+              }`}
+            >
+              {suggestion}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
 
 const Inventory = () => {
   const { data: inventoryRecords, refreshData } = useSupabaseData("inventory");
@@ -281,12 +426,10 @@ const Inventory = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Inventory</h1>
         <div className="flex items-center space-x-2">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search..."
-            className="border p-2 rounded w-64"
+          <InventorySearch 
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            inventoryRecords={inventoryRecords}
           />
           <button
             onClick={() => setShowAddForm(true)}
