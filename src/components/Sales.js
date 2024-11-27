@@ -22,6 +22,11 @@ const Sales = () => {
   const [showDateRangeModal, setShowDateRangeModal] = useState(false);
   const [recordsByOR, setRecordsByOR] = useState([]);
 
+  const [pendingEntries, setPendingEntries] = useState([]);
+  const [showORPrompt, setShowORPrompt] = useState(false);
+  const [newORNumber, setNewORNumber] = useState("");
+  const [shouldReset, setShouldReset] = useState(false);
+
   const fetchRecordsByOR = async (orNumber) => {
     const { data, error } = await supabase
       .from("sales")
@@ -35,6 +40,103 @@ const Sales = () => {
       setShowPrintSlip(true); // Open the PrintSlipModal
     }
   };
+
+  const handleCommitPendingEntries = async () => {
+    if (!newORNumber) {
+      alert("Please provide an OR number.");
+      return;
+    }
+
+    // Fetch current max issuance number
+    let maxIssuanceNo = Math.max(
+      0,
+      ...salesRecords.map((record) => record.issuance_no || 0),
+    );
+
+    maxIssuanceNo = maxIssuanceNo + 1;
+    // Add issuance numbers and OR number to each entry
+    const entriesWithNumbers = pendingEntries.map((entry) => ({
+      ...entry,
+      issuance_no: maxIssuanceNo,
+      or_number: newORNumber,
+    }));
+
+    // Insert into database
+    await supabase.from("sales").insert(entriesWithNumbers);
+
+    // Update inventory counts
+    for (let entry of entriesWithNumbers) {
+      const product = inventoryRecords.find(
+        (item) => item.id === entry.product_id,
+      );
+      await supabase
+        .from("inventory")
+        .update({ item_count: product.item_count - entry.item_count })
+        .match({ id: entry.product_id });
+    }
+
+    setShouldReset(true);
+    setTimeout(() => setShouldReset(false), 0);
+    // Clear pending entries and refresh
+    setPendingEntries([]);
+    setNewORNumber("");
+    setShowORPrompt(false);
+    refreshData();
+  };
+
+  const handleAddToPending = (
+    newProductId,
+    newItemCount,
+    studentName,
+    studentId,
+    courseAndSection,
+    remarks,
+    itemDesc,
+    itemType,
+  ) => {
+    const product = inventoryRecords.find((item) => item.id === newProductId);
+    console.log(newProductId);
+    console.log(newItemCount);
+    console.log(studentName);
+    console.log(studentId);
+    console.log(courseAndSection);
+    console.log(remarks);
+    console.log(itemDesc);
+    console.log(itemType);
+
+    if (!product) {
+      alert("Invalid product ID.");
+      return;
+    }
+
+    const itemCount = parseInt(newItemCount);
+    if (itemCount > product.item_count) {
+      alert("Item count exceeds available inventory.");
+      return;
+    }
+
+    const amount = itemCount * product.price;
+
+    setPendingEntries((prev) => [
+      ...prev,
+      {
+        product_id: newProductId,
+        item_count: itemCount,
+        amount: amount,
+        student_name: studentName,
+        student_id: studentId,
+        course_and_section: courseAndSection,
+        remarks: remarks,
+        item_desc: itemDesc,
+        item_type: itemType,
+      },
+    ]);
+    console.log(pendingEntries);
+
+    refreshData();
+    setShowAddModal(false);
+  };
+
   const handleExportCSV = () => {
     const filteredSalesRecords = salesRecords.filter((record) => {
       const recordDate = new Date(record.last_modified);
@@ -119,60 +221,6 @@ const Sales = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
-
-  const handleAdd = async (
-    newProductId,
-    newItemCount,
-    studentName,
-    IssuanceNo,
-    studentId,
-    courseAndSection,
-    remarks,
-    itemDesc,
-    itemType,
-    itemAmount,
-    orNumber,
-  ) => {
-    const product = inventoryRecords.find((item) => item.id === newProductId);
-
-    if (!product) {
-      alert("Invalid product ID.");
-      return;
-    }
-
-    const itemCount = parseInt(newItemCount);
-    if (itemCount > product.item_count) {
-      alert("Item count exceeds available inventory.");
-      return;
-    }
-
-    const amount = itemCount * product.price;
-
-    // Insert new sales record with student name and remarks
-    await supabase.from("sales").insert({
-      product_id: newProductId,
-      item_count: itemCount,
-      amount: amount,
-      student_name: studentName,
-      issuance_no: IssuanceNo,
-      student_id: studentId,
-      course_and_section: courseAndSection,
-      remarks: remarks,
-      item_desc: itemDesc,
-      item_type: itemType,
-      amount: itemAmount,
-      or_number: orNumber,
-    });
-
-    // Update inventory
-    await supabase
-      .from("inventory")
-      .update({ item_count: product.item_count - itemCount })
-      .match({ id: product.id });
-
-    refreshData();
-    setShowAddModal(false);
   };
 
   const handleEdit = async (
@@ -295,6 +343,13 @@ const Sales = () => {
             className="bg-blue-500 text-white py-2 px-4 rounded"
           >
             Add Sale
+          </button>
+          <button
+            onClick={() => setShowORPrompt(true)}
+            className="bg-blue-500 text-white py-2 px-4 rounded"
+            disabled={pendingEntries.length === 0}
+          >
+            Finalize and Commit
           </button>
           <button
             onClick={handleExportCSV}
@@ -467,8 +522,9 @@ const Sales = () => {
       <AddSalesModal
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
-        onAdd={handleAdd}
+        onAdd={handleAddToPending}
         inventoryRecords={inventoryRecords}
+        shouldReset={shouldReset}
       />
 
       <EditSalesModal
@@ -491,6 +547,34 @@ const Sales = () => {
         selectedRecord={recordsByOR}
         inventoryData={inventoryRecords}
       />
+
+      {showORPrompt && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h2 className="text-xl font-semibold mb-4">Enter OR Number</h2>
+            <input
+              type="text"
+              value={newORNumber}
+              onChange={(e) => setNewORNumber(e.target.value)}
+              className="py-2 px-4 border rounded w-full"
+            />
+            <div className="mt-4 flex justify-end space-x-2">
+              <button
+                onClick={() => setShowORPrompt(false)}
+                className="bg-gray-500 text-white py-2 px-4 rounded"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCommitPendingEntries}
+                className="bg-blue-500 text-white py-2 px-4 rounded"
+              >
+                Commit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

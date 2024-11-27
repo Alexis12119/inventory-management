@@ -1,18 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
+const AddSalesModal = ({
+  isOpen,
+  onClose,
+  onAdd,
+  inventoryRecords,
+  shouldReset,
+}) => {
   const [newProductId, setNewProductId] = useState("");
-  const [newIssuanceNo, setNewIssuanceNo] = useState("");
   const [newItemCount, setNewItemCount] = useState("");
   const [addRemarks, setAddRemarks] = useState("");
   const [addStudentName, setAddStudentName] = useState("");
-  const [addORNumber, setAddORNumber] = useState("");
   const [addStudentId, setStudentId] = useState("");
   const [newItemDesc, setNewItemDesc] = useState("");
   const [newItemType, setNewItemType] = useState("");
-  const [newAmount, setNewAmount] = useState("");
   const [addCourseAndSection, setCourseAndSection] = useState("");
 
+  useEffect(() => {
+    if (shouldReset) {
+      resetForm();
+    }
+  }, [shouldReset]);
+
+  const resetForm = () => {
+    setNewProductId("");
+    setNewItemCount("");
+    setAddRemarks("");
+    setAddStudentName("");
+    setStudentId("");
+    setNewItemDesc("");
+    setNewItemType("");
+    setCourseAndSection("");
+  };
+
+  const handleClose = () => {
+    resetForm();
+    onClose();
+  };
   if (!isOpen) return null;
 
   return (
@@ -36,13 +60,6 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
           value={addStudentName}
           onChange={(e) => setAddStudentName(e.target.value)}
           placeholder="Issued to"
-          className="border p-2 mb-2 w-full"
-        />
-        <input
-          type="text"
-          value={newIssuanceNo}
-          onChange={(e) => setNewIssuanceNo(e.target.value)}
-          placeholder="Issuance No"
           className="border p-2 mb-2 w-full"
         />
         <input
@@ -84,23 +101,9 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
         </select>
         <input
           type="text"
-          value={newAmount}
-          onChange={(e) => setNewAmount(e.target.value)}
-          placeholder="Amount"
-          className="border p-2 mb-2 w-full"
-        />
-        <input
-          type="text"
           value={addRemarks}
           onChange={(e) => setAddRemarks(e.target.value)}
           placeholder="Remarks"
-          className="border p-2 mb-2 w-full"
-        />
-        <input
-          type="text"
-          value={addORNumber}
-          onChange={(e) => setAddORNumber(e.target.value)}
-          placeholder="OR Number"
           className="border p-2 mb-2 w-full"
         />
         <div className="flex justify-end">
@@ -110,14 +113,11 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
                 newProductId,
                 newItemCount,
                 addStudentName,
-                newIssuanceNo,
                 addStudentId,
                 addCourseAndSection,
                 addRemarks,
                 newItemDesc,
                 newItemType,
-                newAmount,
-                addORNumber,
               )
             }
             className="bg-blue-500 text-white py-2 px-4 rounded mr-2"
@@ -125,7 +125,7 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
             Add
           </button>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="bg-red-500 text-white py-2 px-4 rounded"
           >
             Cancel
