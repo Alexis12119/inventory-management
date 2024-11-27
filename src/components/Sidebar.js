@@ -52,10 +52,10 @@ const Sidebar = ({ handleLogout }) => {
             onClick={() => handleNavigation("/maintenance")}
             className="flex items-center py-2 px-2 rounded hover:bg-gray-700 transition-colors duration-200"
           >
-            <FaWrench className="mr-2" />
-            <span className="transition-opacity duration-300 opacity-0 group-hover:opacity-100">
-              Maintenance
-            </span>
+            {/* <FaWrench className="mr-2" /> */}
+            {/* <span className="transition-opacity duration-300 opacity-0 group-hover:opacity-100"> */}
+            {/*   Maintenance */}
+            {/* </span> */}
           </button>
         </nav>
       </div>
