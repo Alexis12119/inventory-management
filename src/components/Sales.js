@@ -42,46 +42,53 @@ const Sales = () => {
   };
 
   const handleCommitPendingEntries = async () => {
-    if (!newORNumber) {
-      alert("Please provide an OR number.");
-      return;
-    }
+    console.log(pendingEntries);
+    if (pendingEntries.length !== 0) {
+      if (!newORNumber) {
+        alert("Please provide an OR number.");
+        return;
+      }
 
-    // Fetch current max issuance number
-    let maxIssuanceNo = Math.max(
-      0,
-      ...salesRecords.map((record) => record.issuance_no || 0),
-    );
-
-    maxIssuanceNo = maxIssuanceNo + 1;
-    // Add issuance numbers and OR number to each entry
-    const entriesWithNumbers = pendingEntries.map((entry) => ({
-      ...entry,
-      issuance_no: maxIssuanceNo,
-      or_number: newORNumber,
-    }));
-
-    // Insert into database
-    await supabase.from("sales").insert(entriesWithNumbers);
-
-    // Update inventory counts
-    for (let entry of entriesWithNumbers) {
-      const product = inventoryRecords.find(
-        (item) => item.id === entry.product_id,
+      // Fetch current max issuance number
+      let maxIssuanceNo = Math.max(
+        0,
+        ...salesRecords.map((record) => record.issuance_no || 0),
       );
-      await supabase
-        .from("inventory")
-        .update({ item_count: product.item_count - entry.item_count })
-        .match({ id: entry.product_id });
-    }
 
-    setShouldReset(true);
-    setTimeout(() => setShouldReset(false), 0);
-    // Clear pending entries and refresh
-    setPendingEntries([]);
-    setNewORNumber("");
-    setShowORPrompt(false);
-    refreshData();
+      maxIssuanceNo = maxIssuanceNo + 1;
+      // Add issuance numbers and OR number to each entry
+      const entriesWithNumbers = pendingEntries.map((entry) => ({
+        ...entry,
+        issuance_no: maxIssuanceNo,
+        or_number: newORNumber,
+      }));
+
+      // Insert into database
+      await supabase.from("sales").insert(entriesWithNumbers);
+
+      // Update inventory counts
+      for (let entry of entriesWithNumbers) {
+        const product = inventoryRecords.find(
+          (item) => item.id === entry.product_id,
+        );
+        await supabase
+          .from("inventory")
+          .update({ item_count: product.item_count - entry.item_count })
+          .match({ id: entry.product_id });
+      }
+
+      alert("Pending entries successfully committed.");
+
+      setShouldReset(true);
+      setTimeout(() => setShouldReset(false), 0);
+      // Clear pending entries and refresh
+      setPendingEntries([]);
+      setNewORNumber("");
+      setShowORPrompt(false);
+      refreshData();
+    } else {
+      alert("There are no entries to commit.");
+    }
   };
 
   const handleAddToPending = (
@@ -95,14 +102,6 @@ const Sales = () => {
     itemType,
   ) => {
     const product = inventoryRecords.find((item) => item.id === newProductId);
-    console.log(newProductId);
-    console.log(newItemCount);
-    console.log(studentName);
-    console.log(studentId);
-    console.log(courseAndSection);
-    console.log(remarks);
-    console.log(itemDesc);
-    console.log(itemType);
 
     if (!product) {
       alert("Invalid product ID.");
@@ -131,8 +130,8 @@ const Sales = () => {
         item_type: itemType,
       },
     ]);
-    console.log(pendingEntries);
 
+    alert("Item successfully added to the pending list.");
     refreshData();
     setShowAddModal(false);
   };
@@ -342,15 +341,16 @@ const Sales = () => {
             onClick={() => setShowAddModal(true)}
             className="bg-blue-500 text-white py-2 px-4 rounded"
           >
-            Add Sale
+            Add Sale Entry
           </button>
-          <button
-            onClick={() => setShowORPrompt(true)}
-            className="bg-blue-500 text-white py-2 px-4 rounded"
-            disabled={pendingEntries.length === 0}
-          >
-            Finalize and Commit
-          </button>
+          {pendingEntries.length > 0 && (
+            <button
+              onClick={() => setShowORPrompt(true)}
+              className="bg-blue-500 text-white py-2 px-4 rounded"
+            >
+              Finalize and Commit
+            </button>
+          )}
           <button
             onClick={handleExportCSV}
             className="bg-green-500 text-white py-2 px-4 rounded"
