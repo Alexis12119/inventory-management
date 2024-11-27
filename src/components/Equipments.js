@@ -22,6 +22,64 @@ const Equipments = () => {
     refreshData();
   };
 
+  const handleExportCSV = () => {
+    const filteredEquipments = equipments.filter((record) => {
+      const recordDate = new Date(record.date_acquired);
+      return recordDate;
+    });
+
+    const csvData = [
+      [
+        "Equipment ID",
+        "Equipment Name",
+        "Equipment Description",
+        "Brand",
+        "Model",
+        "Serial",
+        "Major Category",
+        "Minor Category",
+        "Quantity",
+        "OuM",
+        "Unit Cost",
+        "Location",
+        "Condition",
+        "Date Acquired",
+      ],
+      ...filteredEquipments.map((record) => {
+        return [
+          record.id,
+          record.name,
+          record.description,
+          record.brand,
+          record.model,
+          record.serial,
+          record.major_category,
+          record.minor_category,
+          record.quantity,
+          record.oum,
+          record.unit_cost,
+          record.location,
+          record.condition,
+          record.date_acquired,
+        ];
+      }),
+    ];
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      csvData
+        .map((row) => row.map((field) => `"${field}"`).join(","))
+        .join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "equipments.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const handleEdit = async (data) => {
     const { id, name } = data;
 
@@ -70,12 +128,20 @@ const Equipments = () => {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Equipments</h1>
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="bg-blue-500 text-white py-2 px-4 rounded"
-        >
-          Add
-        </button>
+        <div className="flex space-x-2 items-center">
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="bg-blue-500 text-white py-2 px-4 rounded"
+          >
+            Add
+          </button>
+          <button
+            onClick={handleExportCSV}
+            className="bg-green-500 text-white py-2 px-4 rounded"
+          >
+            Export as CSV
+          </button>
+        </div>
       </div>
       <div className="overflow-x-auto pb-14 pt-4">
         <table className="min-w-full bg-white border border-gray-300">
