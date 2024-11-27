@@ -78,8 +78,8 @@ const Sales = () => {
         "Course/Section",
         "Item Code", // This matches the "Item ID"
         "Item Count",
-        "Item Description",
         "Item Type",
+        "Item Description",
         "Amount",
         "Remarks",
       ],
@@ -262,6 +262,9 @@ const Sales = () => {
     // If both dates are set, check if record date is between them
     return recordDate >= start && recordDate <= end;
   });
+  const sortedSalesRecords = filteredSalesRecords.sort((a, b) => {
+    return new Date(b.last_modified) - new Date(a.last_modified); // Sort by last_modified descending
+  });
 
   const grandTotal = filteredSalesRecords.reduce(
     (total, record) => total + record.amount,
@@ -357,17 +360,17 @@ const Sales = () => {
               <th className="py-2 px-4 border-b text-center">Course/Section</th>
               <th className="py-2 px-4 border-b text-center">Item Code</th>
               <th className="py-2 px-4 border-b text-center">Item Count</th>
+              <th className="py-2 px-4 border-b text-center">Item Type</th>
               <th className="py-2 px-4 border-b text-center">
                 Item Description
               </th>
-              <th className="py-2 px-4 border-b text-center">Item Type</th>
               <th className="py-2 px-4 border-b text-center">Amount</th>
               <th className="py-2 px-4 border-b text-center">Remarks</th>
               <th className="py-2 px-4 border-b text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredSalesRecords.map((record) => {
+            {sortedSalesRecords.map((record) => {
               const product = inventoryRecords.find(
                 (item) => item.id === record.product_id,
               );
@@ -386,10 +389,10 @@ const Sales = () => {
                     {record ? record.student_name : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
-                    {record ? record.student_id: "N/A"}
+                    {record ? record.student_id : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
-                    {record ? record.course_and_section: "N/A"}
+                    {record ? record.course_and_section : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
                     {record ? record.product_id : "N/A"}
