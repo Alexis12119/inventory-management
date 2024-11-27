@@ -51,13 +51,6 @@ const EditSalesModal = ({
         />
         <input
           type="text"
-          value={editIssuanceNo}
-          onChange={(e) => setEditIssuanceNo(e.target.value)}
-          placeholder="Issuance No"
-          className="border p-2 mb-2 w-full"
-        />
-        <input
-          type="text"
           value={editStudentName}
           onChange={(e) => setEditStudentName(e.target.value)}
           placeholder="Issued to"
@@ -107,20 +100,12 @@ const EditSalesModal = ({
           placeholder="Amount"
           className="border p-2 mb-2 w-full"
         />
-        <input
-          type="text"
-          value={editORNumber}
-          onChange={(e) => setEditORNumber(e.target.value)}
-          placeholder="OR Number"
-          className="border p-2 mb-2 w-full"
-        />
         <div className="flex justify-end">
           <button
             onClick={() =>
               onEdit(
                 item.id,
                 editItemCount,
-                editIssuanceNo,
                 editStudentName,
                 editStudentId,
                 editCourseAndSection,
@@ -128,7 +113,6 @@ const EditSalesModal = ({
                 editDescription,
                 editItemType,
                 editAmount,
-                editORNumber,
               )
             }
             className="bg-blue-500 text-white py-2 px-4 rounded mr-2"

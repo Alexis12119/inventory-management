@@ -132,7 +132,7 @@ const Sales = () => {
     itemDesc,
     itemType,
     itemAmount,
-    crNumber,
+    orNumber,
   ) => {
     const product = inventoryRecords.find((item) => item.id === newProductId);
 
@@ -162,7 +162,7 @@ const Sales = () => {
       item_desc: itemDesc,
       item_type: itemType,
       amount: itemAmount,
-      cr_number: crNumber,
+      or_number: orNumber,
     });
 
     // Update inventory
@@ -178,7 +178,6 @@ const Sales = () => {
   const handleEdit = async (
     recordId,
     editItemCount,
-    IssuanceNo,
     studentName,
     studentId,
     courseAndSection,
@@ -186,7 +185,6 @@ const Sales = () => {
     itemDesc,
     itemType,
     itemAmount,
-    orNumber,
   ) => {
     const record = salesRecords.find((rec) => rec.id === recordId);
     const product = inventoryRecords.find(
@@ -207,7 +205,6 @@ const Sales = () => {
       .from("sales")
       .update({
         item_count: newItemCount,
-        issuance_no: IssuanceNo,
         amount: amount,
         student_name: studentName,
         student_id: studentId,
@@ -217,7 +214,6 @@ const Sales = () => {
         item_desc: itemDesc,
         item_type: itemType,
         amount: itemAmount,
-        cr_number: orNumber,
       })
       .match({ id: recordId });
 
@@ -391,7 +387,7 @@ const Sales = () => {
                     {record ? record.issuance_no : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
-                    {record ? record.cr_number : "N/A"}
+                    {record ? record.or_number : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
                     {record ? record.student_name : "N/A"}
