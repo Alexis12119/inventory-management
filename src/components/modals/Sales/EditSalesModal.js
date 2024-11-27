@@ -8,7 +8,6 @@ const EditSalesModal = ({
   inventoryRecords,
 }) => {
   const [editItemCount, setEditItemCount] = useState("");
-  const [editIssuanceNo, setEditIssuanceNo] = useState("");
   const [editRemarks, setRemarks] = useState("");
   const [editStudentName, setEditStudentName] = useState("");
   const [editORNumber, setEditORNumber] = useState("");
