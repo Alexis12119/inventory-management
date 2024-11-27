@@ -11,7 +11,7 @@ const Dashboard = () => {
     <div className="flex justify-center items-center h-screen bg-white">
       <div className="bg-gray-200 p-8 rounded-lg shadow-3xl">
         <h1 className="text-2xl font-bold mb-8 text-center">Dashboard</h1>
-        <div className="grid grid-cols-2 gap-4 w-80">
+        <div className="grid grid-cols-1 gap-4 w-80">
           <button
             className={buttonStyles}
             onClick={() => navigate("/inventory")}
@@ -29,12 +29,6 @@ const Dashboard = () => {
             onClick={() => navigate("/sales")}
           >
             Sales
-          </button>
-          <button
-            className={buttonStyles}
-            onClick={() => navigate("/maintenance")}
-          >
-            Maintenance
           </button>
         </div>
       </div>

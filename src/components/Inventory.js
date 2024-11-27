@@ -1,14 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import useSupabaseData from "../hooks/useSupabaseData";
 import QRCodeModal from "./modals/QRCodeModal.js";
 import { supabase } from "./auth/supabaseClient";
 import html2canvas from "html2canvas";
 
-const InventorySearch = ({ 
-  searchTerm, 
-  setSearchTerm, 
-  inventoryRecords 
-}) => {
+const InventorySearch = ({ searchTerm, setSearchTerm, inventoryRecords }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
@@ -20,14 +16,14 @@ const InventorySearch = ({
     // Combine unique product names and IDs
     const uniqueSuggestions = [
       ...new Set([
-        ...inventoryRecords.map(record => record.product_name),
-        ...inventoryRecords.map(record => record.id)
-      ])
+        ...inventoryRecords.map((record) => record.product_name),
+        ...inventoryRecords.map((record) => record.id),
+      ]),
     ];
 
     return uniqueSuggestions
-      .filter(suggestion => 
-        suggestion.toLowerCase().includes(searchTerm.toLowerCase())
+      .filter((suggestion) =>
+        suggestion.toLowerCase().includes(searchTerm.toLowerCase()),
       )
       .slice(0, 5); // Limit to 5 suggestions
   };
@@ -36,7 +32,7 @@ const InventorySearch = ({
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    
+
     // Generate and show suggestions if input is not empty
     if (value.trim()) {
       const filteredSuggestions = generateSuggestions();
@@ -53,31 +49,35 @@ const InventorySearch = ({
   const handleKeyDown = (e) => {
     if (!showSuggestions) return;
 
-    switch(e.key) {
-      case 'Tab':
+    switch (e.key) {
+      case "Tab":
         e.preventDefault();
-        
+
         // Cycle through suggestions
-        const newIndex = e.shiftKey 
-          ? (activeSuggestionIndex > 0 ? activeSuggestionIndex - 1 : suggestions.length - 1)
-          : (activeSuggestionIndex < suggestions.length - 1 ? activeSuggestionIndex + 1 : 0);
-        
+        const newIndex = e.shiftKey
+          ? activeSuggestionIndex > 0
+            ? activeSuggestionIndex - 1
+            : suggestions.length - 1
+          : activeSuggestionIndex < suggestions.length - 1
+            ? activeSuggestionIndex + 1
+            : 0;
+
         setActiveSuggestionIndex(newIndex);
-        
+
         // Update search term with the active suggestion
         if (suggestions[newIndex]) {
           setSearchTerm(suggestions[newIndex]);
         }
         break;
 
-      case 'Enter':
+      case "Enter":
         if (activeSuggestionIndex >= 0 && suggestions[activeSuggestionIndex]) {
           setSearchTerm(suggestions[activeSuggestionIndex]);
           setShowSuggestions(false);
         }
         break;
 
-      case 'Escape':
+      case "Escape":
         setShowSuggestions(false);
         break;
     }
@@ -94,18 +94,18 @@ const InventorySearch = ({
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        inputRef.current && 
+        inputRef.current &&
         !inputRef.current.contains(event.target) &&
-        suggestionRef.current && 
+        suggestionRef.current &&
         !suggestionRef.current.contains(event.target)
       ) {
         setShowSuggestions(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -128,7 +128,7 @@ const InventorySearch = ({
         className="border p-2 rounded w-64"
       />
       {showSuggestions && suggestions.length > 0 && (
-        <ul 
+        <ul
           ref={suggestionRef}
           className="absolute z-10 w-64 bg-white border border-gray-300 rounded mt-1 shadow-lg"
         >
@@ -137,7 +137,7 @@ const InventorySearch = ({
               key={index}
               onClick={() => handleSuggestionClick(suggestion)}
               className={`p-2 hover:bg-gray-100 cursor-pointer ${
-                index === activeSuggestionIndex ? 'bg-gray-200' : ''
+                index === activeSuggestionIndex ? "bg-gray-200" : ""
               }`}
             >
               {suggestion}
@@ -206,11 +206,24 @@ const Inventory = () => {
     }
 
     try {
+      // Fetch the current record to get the current stock count
+      const { data: currentRecord, error: fetchError } = await supabase
+        .from("inventory")
+        .select("item_count")
+        .eq("id", currentRecordId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      // Calculate the new stock count (current stock + additional stock)
+      const newStockCount =
+        currentRecord.item_count + parseInt(additionalStock);
+
       // Update the stock count in the database
       const { data, error } = await supabase
         .from("inventory")
         .update({
-          item_count: parseInt(additionalStock),
+          item_count: newStockCount,
         })
         .eq("id", currentRecordId);
 
@@ -426,7 +439,7 @@ const Inventory = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Inventory</h1>
         <div className="flex items-center space-x-2">
-          <InventorySearch 
+          <InventorySearch
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             inventoryRecords={inventoryRecords}
