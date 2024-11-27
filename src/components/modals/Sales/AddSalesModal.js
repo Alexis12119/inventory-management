@@ -6,9 +6,11 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
   const [newItemCount, setNewItemCount] = useState("");
   const [addRemarks, setAddRemarks] = useState("");
   const [addStudentName, setAddStudentName] = useState("");
-  const [addDescription, setAddDescription] = useState("");
   const [addORNumber, setAddORNumber] = useState("");
   const [addStudentId, setStudentId] = useState("");
+  const [newItemDesc, setNewItemDesc] = useState("");
+  const [newItemType, setNewItemType] = useState("");
+  const [newAmount, setNewAmount] = useState("");
   const [addCourseAndSection, setCourseAndSection] = useState("");
 
   if (!isOpen) return null;
@@ -66,16 +68,32 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
         />
         <input
           type="text"
-          value={addRemarks}
-          onChange={(e) => setAddRemarks(e.target.value)}
-          placeholder="Remarks"
+          value={newItemDesc}
+          onChange={(e) => setNewItemDesc(e.target.value)}
+          placeholder="Item Description"
+          className="border p-2 mb-2 w-full"
+        />
+        <select
+          value={newItemType}
+          onChange={(e) => setNewItemType(e.target.value)}
+          className="border p-2 mb-2 w-full"
+        >
+          <option value="">Select Item Type</option>
+          <option value="Proware">Proware</option>
+          <option value="Uniform">Uniform</option>
+        </select>
+        <input
+          type="text"
+          value={newAmount}
+          onChange={(e) => setNewAmount(e.target.value)}
+          placeholder="Amount"
           className="border p-2 mb-2 w-full"
         />
         <input
           type="text"
-          value={addDescription}
-          onChange={(e) => setAddDescription(e.target.value)}
-          placeholder="Description"
+          value={addRemarks}
+          onChange={(e) => setAddRemarks(e.target.value)}
+          placeholder="Remarks"
           className="border p-2 mb-2 w-full"
         />
         <input
@@ -96,7 +114,9 @@ const AddSalesModal = ({ isOpen, onClose, onAdd, inventoryRecords }) => {
                 addStudentId,
                 addCourseAndSection,
                 addRemarks,
-                addDescription,
+                newItemDesc,
+                newItemType,
+                newAmount,
                 addORNumber,
               )
             }

@@ -11,9 +11,11 @@ const EditSalesModal = ({
   const [editIssuanceNo, setEditIssuanceNo] = useState("");
   const [editRemarks, setRemarks] = useState("");
   const [editStudentName, setEditStudentName] = useState("");
-  const [editDescription, setEditDescription] = useState("");
   const [editORNumber, setEditORNumber] = useState("");
   const [editStudentId, setEditStudentId] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [editItemType, setEditItemType] = useState("");
+  const [editAmount, setEditAmount] = useState("");
   const [editCourseAndSection, setEditCourseAndSection] = useState("");
 
   useEffect(() => {
@@ -21,10 +23,12 @@ const EditSalesModal = ({
       setEditItemCount(item.item_count.toString());
       setEditStudentName(item.student_name || "");
       setRemarks(item.remarks || "");
-      setEditDescription(item.item_desc || "");
       setEditORNumber(item.cr_number || "");
       setEditStudentId(item.student_id || "");
       setEditCourseAndSection(item.course_and_section || "");
+      setEditDescription(item.item_desc || "");
+      setEditItemType(item.item_type || "");
+      setEditAmount(item.amount.toString());
       setEditIssuanceNo(item.issuance_no || "");
     }
   }, [item]);
@@ -87,6 +91,22 @@ const EditSalesModal = ({
           placeholder="Description"
           className="border p-2 mb-2 w-full"
         />
+        <select
+          value={editItemType}
+          onChange={(e) => setEditItemType(e.target.value)}
+          className="border p-2 mb-2 w-full"
+        >
+          <option value="">Select Item Type</option>
+          <option value="Proware">Proware</option>
+          <option value="Uniform">Uniform</option>
+        </select>
+        <input
+          type="text"
+          value={editAmount}
+          onChange={(e) => setEditAmount(e.target.value)}
+          placeholder="Amount"
+          className="border p-2 mb-2 w-full"
+        />
         <input
           type="text"
           value={editORNumber}
@@ -106,6 +126,8 @@ const EditSalesModal = ({
                 editCourseAndSection,
                 editRemarks,
                 editDescription,
+                editItemType,
+                editAmount,
                 editORNumber,
               )
             }

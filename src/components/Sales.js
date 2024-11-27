@@ -130,6 +130,8 @@ const Sales = () => {
     courseAndSection,
     remarks,
     itemDesc,
+    itemType,
+    itemAmount,
     crNumber,
   ) => {
     const product = inventoryRecords.find((item) => item.id === newProductId);
@@ -158,6 +160,8 @@ const Sales = () => {
       course_and_section: courseAndSection,
       remarks: remarks,
       item_desc: itemDesc,
+      item_type: itemType,
+      amount: itemAmount,
       cr_number: crNumber,
     });
 
@@ -180,6 +184,8 @@ const Sales = () => {
     courseAndSection,
     remarks,
     itemDesc,
+    itemType,
+    itemAmount,
     orNumber,
   ) => {
     const record = salesRecords.find((rec) => rec.id === recordId);
@@ -209,6 +215,8 @@ const Sales = () => {
         remarks: remarks,
         last_modified: new Date(),
         item_desc: itemDesc,
+        item_type: itemType,
+        amount: itemAmount,
         cr_number: orNumber,
       })
       .match({ id: recordId });
@@ -360,10 +368,10 @@ const Sales = () => {
               <th className="py-2 px-4 border-b text-center">Course/Section</th>
               <th className="py-2 px-4 border-b text-center">Item Code</th>
               <th className="py-2 px-4 border-b text-center">Item Count</th>
-              <th className="py-2 px-4 border-b text-center">Item Type</th>
               <th className="py-2 px-4 border-b text-center">
                 Item Description
               </th>
+              <th className="py-2 px-4 border-b text-center">Item Type</th>
               <th className="py-2 px-4 border-b text-center">Amount</th>
               <th className="py-2 px-4 border-b text-center">Remarks</th>
               <th className="py-2 px-4 border-b text-center">Actions</th>
@@ -401,10 +409,10 @@ const Sales = () => {
                     {record ? record.item_count : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
-                    {record ? record.item_desc : "N/A"}
+                    {product ? record.item_desc : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
-                    {product ? product.product_name : "N/A"}
+                    {record ? record.item_type : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
                     {record ? record.amount.toFixed(2) : "N/A"}
