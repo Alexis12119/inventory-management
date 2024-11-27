@@ -13,7 +13,7 @@ const EditEquipmentModal = ({ isOpen, onClose, onEdit, equipment }) => {
   const [unitCost, setUnitCost] = useState("");
   const [location, setLocation] = useState("");
   const [condition, setCondition] = useState("");
-  const [days_interval, setDaysInterval] = useState("");
+  const [dateAcquired, setDateAcquired] = useState("");
 
   useEffect(() => {
     if (equipment) {
@@ -29,7 +29,7 @@ const EditEquipmentModal = ({ isOpen, onClose, onEdit, equipment }) => {
       setUnitCost(equipment.unit_cost || "");
       setLocation(equipment.location || "");
       setCondition(equipment.condition || "");
-      setDaysInterval(equipment.days_interval || "");
+      setDateAcquired(equipment.date_acquired || "");
     }
   }, [equipment]);
 
@@ -47,7 +47,7 @@ const EditEquipmentModal = ({ isOpen, onClose, onEdit, equipment }) => {
       !unitCost &&
       !location &&
       !condition &&
-      !days_interval
+      !dateAcquired
     ) {
       alert("Please fill out all fields.");
       return;
@@ -67,7 +67,7 @@ const EditEquipmentModal = ({ isOpen, onClose, onEdit, equipment }) => {
       unit_cost: unitCost,
       location,
       condition,
-      days_interval,
+      date_acquired: dateAcquired,
     });
     onClose();
   };
@@ -161,10 +161,10 @@ const EditEquipmentModal = ({ isOpen, onClose, onEdit, equipment }) => {
           className="border p-2 mb-2 w-full"
         />
         <input
-          type="text"
-          value={days_interval}
-          onChange={(e) => setDaysInterval(e.target.value)}
-          placeholder="Days Interval"
+          type="date"
+          value={dateAcquired}
+          onChange={(e) => setDateAcquired(e.target.value)}
+          placeholder="Date Acquired"
           className="border p-2 mb-2 w-full"
         />
         <button

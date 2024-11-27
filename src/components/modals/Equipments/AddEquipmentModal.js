@@ -13,11 +13,12 @@ const AddEquipmentModal = ({ isOpen, onClose, onAdd }) => {
   const [unitCost, setUnitCost] = useState("");
   const [location, setLocation] = useState("");
   const [condition, setCondition] = useState("");
-  const [daysInterval, setDaysInterval] = useState("");
+  const [dateAcquired, setDateAcquired] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onAdd({ name,
+    onAdd({
+      name,
       description,
       brand,
       model,
@@ -29,7 +30,8 @@ const AddEquipmentModal = ({ isOpen, onClose, onAdd }) => {
       unit_cost: unitCost,
       location,
       condition,
-      days_interval: daysInterval });
+      date_acquired: dateAcquired,
+    });
     onClose();
     setName("");
     setDescription("");
@@ -43,7 +45,7 @@ const AddEquipmentModal = ({ isOpen, onClose, onAdd }) => {
     setUnitCost("");
     setLocation("");
     setCondition("");
-    setDaysInterval("");
+    setDateAcquired("");
   };
 
   if (!isOpen) return null;
@@ -147,10 +149,10 @@ const AddEquipmentModal = ({ isOpen, onClose, onAdd }) => {
             className="border rounded w-full p-3"
           />
           <input
-            type="text"
-            value={daysInterval}
-            onChange={(e) => setDaysInterval(e.target.value)}
-            placeholder="Days Interval"
+            type="date"
+            value={dateAcquired}
+            onChange={(e) => setDateAcquired(e.target.value)}
+            placeholder="Date Acquired"
             className="border rounded w-full p-3"
             required
           />

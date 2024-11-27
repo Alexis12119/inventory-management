@@ -96,7 +96,7 @@ const Equipments = () => {
               <th className="py-2 px-4 border-b text-center">Unit Cost</th>
               <th className="py-2 px-4 border-b text-center">Location</th>
               <th className="py-2 px-4 border-b text-center">Condition</th>
-              <th className="py-2 px-4 border-b text-center">Days Interval</th>
+              <th className="py-2 px-4 border-b text-center">Date Acquired</th>
               <th className="py-2 px-4 border-b text-center">Actions</th>
             </tr>
           </thead>
@@ -137,7 +137,7 @@ const Equipments = () => {
                   {equip.condition}
                 </td>
                 <td className="py-2 px-4 border-b text-center">
-                  {equip.days_interval}
+                  {equip.date_acquired}
                 </td>
                 <td className="py-2 px-4 border-b text-center relative">
                   <button
