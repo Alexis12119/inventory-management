@@ -14,7 +14,6 @@ const EditSalesModal = ({
   const [editStudentId, setEditStudentId] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [editItemType, setEditItemType] = useState("");
-  const [editAmount, setEditAmount] = useState("");
   const [editCourseAndSection, setEditCourseAndSection] = useState("");
 
   useEffect(() => {
@@ -27,7 +26,6 @@ const EditSalesModal = ({
       setEditCourseAndSection(item.course_and_section || "");
       setEditDescription(item.item_desc || "");
       setEditItemType(item.item_type || "");
-      setEditAmount(item.amount.toString());
       setEditIssuanceNo(item.issuance_no || "");
     }
   }, [item]);
@@ -92,13 +90,6 @@ const EditSalesModal = ({
           <option value="Proware">Proware</option>
           <option value="Uniform">Uniform</option>
         </select>
-        <input
-          type="text"
-          value={editAmount}
-          onChange={(e) => setEditAmount(e.target.value)}
-          placeholder="Amount"
-          className="border p-2 mb-2 w-full"
-        />
         <div className="flex justify-end">
           <button
             onClick={() =>
@@ -111,7 +102,6 @@ const EditSalesModal = ({
                 editRemarks,
                 editDescription,
                 editItemType,
-                editAmount,
               )
             }
             className="bg-blue-500 text-white py-2 px-4 rounded mr-2"

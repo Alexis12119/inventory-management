@@ -184,7 +184,6 @@ const Sales = () => {
     remarks,
     itemDesc,
     itemType,
-    itemAmount,
   ) => {
     const record = salesRecords.find((rec) => rec.id === recordId);
     const product = inventoryRecords.find(
@@ -213,7 +212,6 @@ const Sales = () => {
         last_modified: new Date(),
         item_desc: itemDesc,
         item_type: itemType,
-        amount: itemAmount,
       })
       .match({ id: recordId });
 
