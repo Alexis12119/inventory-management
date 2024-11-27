@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 
 const PrintSlipModal = ({ isOpen, onClose, selectedRecord, inventoryData }) => {
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
+  console.log(selectedRecord);
 
   const issuanceNo =
     selectedRecord.length > 0 ? selectedRecord[0].issuance_no : "N/A";
   const currentDate = new Date().toLocaleDateString();
   const orNumber =
-    selectedRecord.length > 0 ? selectedRecord[0].cr_number : "N/A";
+    selectedRecord.length > 0 ? selectedRecord[0].or_number : "N/A";
 
   const studentName =
     selectedRecord.length > 0 ? selectedRecord[0].student_name : "N/A";

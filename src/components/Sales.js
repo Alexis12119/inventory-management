@@ -26,7 +26,7 @@ const Sales = () => {
     const { data, error } = await supabase
       .from("sales")
       .select("*")
-      .eq("cr_number", orNumber);
+      .eq("or_number", orNumber);
 
     if (error) {
       console.error("Error fetching records by OR:", error.message);
@@ -92,7 +92,7 @@ const Sales = () => {
             ? new Date(record.last_modified).toLocaleDateString() // Date only
             : "N/A",
           record.issuance_no, // Sales Item ID
-          record.cr_number || "N/A", // OR Number
+          record.or_number || "N/A", // OR Number
           record.student_name || "N/A", // Issued To
           record.student_id || "N/A", // Student No.
           record.course_and_section || "N/A", // Course/Section
@@ -445,7 +445,7 @@ const Sales = () => {
                         </button>
                         <button
                           onClick={() => {
-                            fetchRecordsByOR(record.cr_number);
+                            fetchRecordsByOR(record.or_number);
                             setShowPrintSlip(true);
                             toggleActionsMenu(record.id);
                           }}

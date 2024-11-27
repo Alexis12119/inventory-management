@@ -10,7 +10,6 @@ const EditSalesModal = ({
   const [editItemCount, setEditItemCount] = useState("");
   const [editRemarks, setRemarks] = useState("");
   const [editStudentName, setEditStudentName] = useState("");
-  const [editORNumber, setEditORNumber] = useState("");
   const [editStudentId, setEditStudentId] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [editItemType, setEditItemType] = useState("");
@@ -21,12 +20,10 @@ const EditSalesModal = ({
       setEditItemCount(item.item_count.toString());
       setEditStudentName(item.student_name || "");
       setRemarks(item.remarks || "");
-      setEditORNumber(item.cr_number || "");
       setEditStudentId(item.student_id || "");
       setEditCourseAndSection(item.course_and_section || "");
       setEditDescription(item.item_desc || "");
       setEditItemType(item.item_type || "");
-      setEditIssuanceNo(item.issuance_no || "");
     }
   }, [item]);
 
