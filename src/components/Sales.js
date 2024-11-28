@@ -20,23 +20,24 @@ const Sales = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [showDateRangeModal, setShowDateRangeModal] = useState(false);
-  const [recordsByOR, setRecordsByOR] = useState([]);
+  // const [recordsByOR, setRecordsByOR] = useState([]);
+  const [recordsByIssuance, setRecordsByIssuance] = useState([]);
 
   const [pendingEntries, setPendingEntries] = useState([]);
-  const [showORPrompt, setShowORPrompt] = useState(false);
+  // const [showORPrompt, setShowORPrompt] = useState(false);
   const [newORNumber, setNewORNumber] = useState("");
   const [shouldReset, setShouldReset] = useState(false);
 
-  const fetchRecordsByOR = async (orNumber) => {
+  const fetchRecordsByIssuance = async (issuanceNumber) => {
     const { data, error } = await supabase
       .from("sales")
       .select("*")
-      .eq("or_number", orNumber);
+      .eq("issuance_no", issuanceNumber);
 
     if (error) {
       console.error("Error fetching records by OR:", error.message);
     } else {
-      setRecordsByOR(data);
+      setRecordsByIssuance(data);
       setShowPrintSlip(true); // Open the PrintSlipModal
     }
   };
@@ -44,11 +45,6 @@ const Sales = () => {
   const handleCommitPendingEntries = async () => {
     console.log(pendingEntries);
     if (pendingEntries.length !== 0) {
-      if (!newORNumber) {
-        alert("Please provide an OR number.");
-        return;
-      }
-
       // Fetch current max issuance number
       let maxIssuanceNo = Math.max(
         0,
@@ -84,7 +80,6 @@ const Sales = () => {
       // Clear pending entries and refresh
       setPendingEntries([]);
       setNewORNumber("");
-      setShowORPrompt(false);
       refreshData();
     } else {
       alert("There are no entries to commit.");
@@ -345,7 +340,7 @@ const Sales = () => {
           </button>
           {pendingEntries.length > 0 && (
             <button
-              onClick={() => setShowORPrompt(true)}
+              onClick={() => handleCommitPendingEntries()}
               className="bg-blue-500 text-white py-2 px-4 rounded"
             >
               Finalize and Commit
@@ -500,7 +495,7 @@ const Sales = () => {
                         </button>
                         <button
                           onClick={() => {
-                            fetchRecordsByOR(record.or_number);
+                            fetchRecordsByIssuance(record.issuance_no);
                             setShowPrintSlip(true);
                             toggleActionsMenu(record.id);
                           }}
@@ -544,37 +539,9 @@ const Sales = () => {
       <PrintSlipModal
         isOpen={showPrintSlip}
         onClose={() => setShowPrintSlip(false)}
-        selectedRecord={recordsByOR}
+        selectedRecord={recordsByIssuance}
         inventoryData={inventoryRecords}
       />
-
-      {showORPrompt && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-            <h2 className="text-xl font-semibold mb-4">Enter OR Number</h2>
-            <input
-              type="text"
-              value={newORNumber}
-              onChange={(e) => setNewORNumber(e.target.value)}
-              className="py-2 px-4 border rounded w-full"
-            />
-            <div className="mt-4 flex justify-end space-x-2">
-              <button
-                onClick={() => setShowORPrompt(false)}
-                className="bg-gray-500 text-white py-2 px-4 rounded"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleCommitPendingEntries}
-                className="bg-blue-500 text-white py-2 px-4 rounded"
-              >
-                Commit
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

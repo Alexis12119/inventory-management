@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 const PrintSlipModal = ({ isOpen, onClose, selectedRecord, inventoryData }) => {
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
-  console.log(selectedRecord);
 
   const issuanceNo =
     selectedRecord.length > 0 ? selectedRecord[0].issuance_no : "N/A";
