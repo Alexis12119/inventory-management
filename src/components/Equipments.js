@@ -234,15 +234,6 @@ const Equipments = () => {
                       >
                         Delete
                       </button>
-                      <button
-                        onClick={() => {
-                          handleGenerateQRCode(equip);
-                          toggleActionsMenu(equip.id);
-                        }}
-                        className="block w-full px-4 py-2 text-center text-gray-800 hover:bg-gray-200"
-                      >
-                        Generate QR
-                      </button>
                     </div>
                   )}
                 </td>
