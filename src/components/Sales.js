@@ -20,11 +20,9 @@ const Sales = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [showDateRangeModal, setShowDateRangeModal] = useState(false);
-  // const [recordsByOR, setRecordsByOR] = useState([]);
   const [recordsByIssuance, setRecordsByIssuance] = useState([]);
 
   const [pendingEntries, setPendingEntries] = useState([]);
-  // const [showORPrompt, setShowORPrompt] = useState(false);
   const [newORNumber, setNewORNumber] = useState("");
   const [shouldReset, setShouldReset] = useState(false);
 
@@ -224,12 +222,30 @@ const Sales = () => {
     studentId,
     courseAndSection,
     remarks,
+    orNumber,
     itemDesc,
     itemType,
   ) => {
     const record = salesRecords.find((rec) => rec.id === recordId);
     const product = inventoryRecords.find(
       (item) => item.id === record.product_id,
+    );
+
+    // Check if OR number already exists in other records
+    if (orNumber) {
+      const existingORNumber = salesRecords.some(
+        (rec) => rec.id !== recordId && rec.or_number === orNumber,
+      );
+
+      if (existingORNumber) {
+        alert("OR number must be unique across all records.");
+        return;
+      }
+    }
+
+    // Update all records with the same issuance number with the new OR number
+    const recordsWithSameIssuance = salesRecords.filter(
+      (rec) => rec.issuance_no === record.issuance_no,
     );
 
     const newItemCount = parseInt(editItemCount);
@@ -242,6 +258,7 @@ const Sales = () => {
 
     const amount = newItemCount * product.price;
 
+    // Update the specific record
     await supabase
       .from("sales")
       .update({
@@ -254,9 +271,23 @@ const Sales = () => {
         last_modified: new Date(),
         item_desc: itemDesc,
         item_type: itemType,
+        or_number: orNumber,
       })
       .match({ id: recordId });
 
+    // Update OR number for all records with the same issuance number
+    if (orNumber) {
+      await Promise.all(
+        recordsWithSameIssuance.map((rec) =>
+          supabase
+            .from("sales")
+            .update({ or_number: orNumber })
+            .match({ id: rec.id }),
+        ),
+      );
+    }
+
+    // Update inventory
     await supabase
       .from("inventory")
       .update({

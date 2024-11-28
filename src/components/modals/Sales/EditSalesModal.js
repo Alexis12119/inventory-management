@@ -14,6 +14,7 @@ const EditSalesModal = ({
   const [editDescription, setEditDescription] = useState("");
   const [editItemType, setEditItemType] = useState("");
   const [editCourseAndSection, setEditCourseAndSection] = useState("");
+  const [editORNumber, setEditORNumber] = useState("");
 
   useEffect(() => {
     if (item) {
@@ -66,6 +67,13 @@ const EditSalesModal = ({
         />
         <input
           type="text"
+          value={editORNumber}
+          onChange={(e) => setEditORNumber(e.target.value)}
+          placeholder="OR Number"
+          className="border p-2 mb-2 w-full"
+        />
+        <input
+          type="text"
           value={editRemarks}
           onChange={(e) => setRemarks(e.target.value)}
           placeholder="Remarks"
@@ -97,6 +105,7 @@ const EditSalesModal = ({
                 editStudentId,
                 editCourseAndSection,
                 editRemarks,
+                editORNumber,
                 editDescription,
                 editItemType,
               )
