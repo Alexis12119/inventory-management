@@ -26,6 +26,21 @@ const Sales = () => {
   const [newORNumber, setNewORNumber] = useState("");
   const [shouldReset, setShouldReset] = useState(false);
 
+  const determineItemType = (productId) => {
+    const product = inventoryRecords.find((item) => item.id === productId);
+    
+    if (!product) {
+      return ""; // Return empty string if product not found
+    }
+
+    // Logic to determine item type based on product name or other characteristics
+    if (product.product_name && product.product_name.toLowerCase().includes("uniform")) {
+      return "Uniform";
+    } else if (product.product_name && product.product_name.toLowerCase().includes("proware")) {
+      return "Proware";
+    }
+  }
+
   const fetchRecordsByIssuance = async (issuanceNumber) => {
     const { data, error } = await supabase
       .from("sales")
@@ -90,9 +105,6 @@ const Sales = () => {
     studentName,
     studentId,
     courseAndSection,
-    remarks,
-    itemDesc,
-    itemType,
   ) => {
     const product = inventoryRecords.find((item) => item.id === newProductId);
 
@@ -101,6 +113,7 @@ const Sales = () => {
       return;
     }
 
+    const finalItemType = determineItemType(newProductId);
     const itemCount = parseInt(newItemCount);
     if (itemCount > product.item_count) {
       alert("Item count exceeds available inventory.");
@@ -118,9 +131,7 @@ const Sales = () => {
         student_name: studentName,
         student_id: studentId,
         course_and_section: courseAndSection,
-        remarks: remarks,
-        item_desc: itemDesc,
-        item_type: itemType,
+        item_type: finalItemType,
       },
     ]);
 
@@ -160,8 +171,6 @@ const Sales = () => {
         "",
         "",
         "",
-        "",
-        "",
       ],
       [
         "Date",
@@ -173,9 +182,7 @@ const Sales = () => {
         "Item Code", // This matches the "Item ID"
         "Item Count",
         "Item Type",
-        "Item Description",
         "Amount",
-        "Remarks",
       ],
       ...filteredSalesRecords.map((record) => {
         const product = inventoryRecords.find(
@@ -192,10 +199,8 @@ const Sales = () => {
           record.course_and_section || "N/A", // Course/Section
           product ? product.id : "N/A", // Item Code (Inventory ID)
           record ? record.item_count : "N/A", // Item Count
-          record.item_desc || "N/A", // Item Description
           product ? product.product_name : "N/A", // Item Type (assumed from product name)
           record.amount ? record.amount.toFixed(2) : "N/A", // Amount
-          record.remarks || "N/A", // Remarks
         ];
       }),
     ];
@@ -221,9 +226,7 @@ const Sales = () => {
     studentName,
     studentId,
     courseAndSection,
-    remarks,
     orNumber,
-    itemDesc,
     itemType,
   ) => {
     const record = salesRecords.find((rec) => rec.id === recordId);
@@ -267,9 +270,7 @@ const Sales = () => {
         student_name: studentName,
         student_id: studentId,
         course_and_section: courseAndSection,
-        remarks: remarks,
         last_modified: new Date(),
-        item_desc: itemDesc,
         item_type: itemType,
         or_number: orNumber,
       })
@@ -443,20 +444,13 @@ const Sales = () => {
               <th className="py-2 px-4 border-b text-center">Course/Section</th>
               <th className="py-2 px-4 border-b text-center">Item Code</th>
               <th className="py-2 px-4 border-b text-center">Item Count</th>
-              <th className="py-2 px-4 border-b text-center">
-                Item Description
-              </th>
               <th className="py-2 px-4 border-b text-center">Item Type</th>
               <th className="py-2 px-4 border-b text-center">Amount</th>
-              <th className="py-2 px-4 border-b text-center">Remarks</th>
               <th className="py-2 px-4 border-b text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
             {sortedSalesRecords.map((record) => {
-              const product = inventoryRecords.find(
-                (item) => item.id === record.product_id,
-              );
               return (
                 <tr key={record.id} className="text-gray-600">
                   <td className="py-2 px-4 border-b text-center">
@@ -484,16 +478,10 @@ const Sales = () => {
                     {record ? record.item_count : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
-                    {product ? record.item_desc : "N/A"}
-                  </td>
-                  <td className="py-2 px-4 border-b text-center">
                     {record ? record.item_type : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
                     {record ? record.amount.toFixed(2) : "N/A"}
-                  </td>
-                  <td className="py-2 px-4 border-b text-center">
-                    {record ? record.remarks : "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b text-center relative">
                     <button
@@ -560,7 +548,6 @@ const Sales = () => {
         onEdit={handleEdit}
         inventoryRecords={inventoryRecords}
       />
-
       <DeleteConfirmationModal
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}

@@ -60,7 +60,6 @@ const PrintSlipModal = ({ isOpen, onClose, selectedRecord, inventoryData }) => {
             <th>Item Code</th>
             <th>Item Name</th>
             <th>Item Count</th>
-            <th>Item Description</th>
             <th>Amount</th>
           </tr>
           ${selectedRecord
@@ -78,7 +77,6 @@ const PrintSlipModal = ({ isOpen, onClose, selectedRecord, inventoryData }) => {
                   <td>${record.product_id}</td>
                   <td>${productName}</td>
                   <td>${record.item_count}</td>
-                  <td>${record.item_desc}</td>
                   <td>₱${(record.item_count * itemPrice).toFixed(2)}</td>
                 </tr>`;
             })
@@ -143,7 +141,6 @@ const PrintSlipModal = ({ isOpen, onClose, selectedRecord, inventoryData }) => {
                   <th className="border px-4 py-2">Item Code</th>
                   <th className="border px-4 py-2">Item Name</th>
                   <th className="border px-4 py-2">Item Count</th>
-                  <th className="border px-4 py-2">Item Description</th>
                   <th className="border px-4 py-2">Amount</th>
                 </tr>
               </thead>
@@ -162,7 +159,6 @@ const PrintSlipModal = ({ isOpen, onClose, selectedRecord, inventoryData }) => {
                       <td className="border px-4 py-2">{record.product_id}</td>
                       <td className="border px-4 py-2">{productName}</td>
                       <td className="border px-4 py-2">{record.item_count}</td>
-                      <td className="border px-4 py-2">{record.item_desc}</td>
                       <td className="border px-4 py-2">
                         ₱{(record.item_count * itemPrice).toFixed(2)}
                       </td>

@@ -9,11 +9,8 @@ const AddSalesModal = ({
 }) => {
   const [newProductId, setNewProductId] = useState("");
   const [newItemCount, setNewItemCount] = useState("");
-  const [addRemarks, setAddRemarks] = useState("");
   const [addStudentName, setAddStudentName] = useState("");
   const [addStudentId, setStudentId] = useState("");
-  const [newItemDesc, setNewItemDesc] = useState("");
-  const [newItemType, setNewItemType] = useState("");
   const [addCourseAndSection, setCourseAndSection] = useState("");
 
   useEffect(() => {
@@ -25,11 +22,8 @@ const AddSalesModal = ({
   const resetForm = () => {
     setNewProductId("");
     setNewItemCount("");
-    setAddRemarks("");
     setAddStudentName("");
     setStudentId("");
-    setNewItemDesc("");
-    setNewItemType("");
     setCourseAndSection("");
   };
 
@@ -83,29 +77,6 @@ const AddSalesModal = ({
           placeholder="Item Count"
           className="border p-2 mb-2 w-full"
         />
-        <input
-          type="text"
-          value={newItemDesc}
-          onChange={(e) => setNewItemDesc(e.target.value)}
-          placeholder="Item Description"
-          className="border p-2 mb-2 w-full"
-        />
-        <select
-          value={newItemType}
-          onChange={(e) => setNewItemType(e.target.value)}
-          className="border p-2 mb-2 w-full"
-        >
-          <option value="">Select Item Type</option>
-          <option value="Proware">Proware</option>
-          <option value="Uniform">Uniform</option>
-        </select>
-        <input
-          type="text"
-          value={addRemarks}
-          onChange={(e) => setAddRemarks(e.target.value)}
-          placeholder="Remarks"
-          className="border p-2 mb-2 w-full"
-        />
         <div className="flex justify-end">
           <button
             onClick={() =>
@@ -115,9 +86,6 @@ const AddSalesModal = ({
                 addStudentName,
                 addStudentId,
                 addCourseAndSection,
-                addRemarks,
-                newItemDesc,
-                newItemType,
               )
             }
             className="bg-blue-500 text-white py-2 px-4 rounded mr-2"

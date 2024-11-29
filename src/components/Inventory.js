@@ -158,13 +158,6 @@ const Inventory = () => {
   const [editName, setEditName] = useState("");
   const [newItemId, setNewItemId] = useState("");
   const [newRemarks, setNewRemarks] = useState("");
-  const [newDescription, setNewDescription] = useState("");
-  const [newBrand, setNewBrand] = useState("");
-  const [newModel, setNewModel] = useState("");
-  const [newSerial, setNewSerial] = useState("");
-  const [newMajorCategory, setNewMajorCategory] = useState("");
-  const [newMinorCategory, setNewMinorCategory] = useState("");
-  const [newLocation, setNewLocation] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [editBrand, setEditBrand] = useState("");
   const [editModel, setEditModel] = useState("");
@@ -269,7 +262,6 @@ const Inventory = () => {
     const { error: insertError } = await supabase.from("inventory").insert({
       id: newItemId,
       product_name: newItemName,
-      item_description: newDescription,
       item_count: parseInt(newItemCount),
       price: parseFloat(newItemPrice),
       remarks: newRemarks,
@@ -286,13 +278,6 @@ const Inventory = () => {
     setNewItemCount("");
     setNewItemPrice("");
     setNewRemarks("");
-    setNewDescription("");
-    setNewBrand("");
-    setNewModel("");
-    setNewSerial("");
-    setNewMajorCategory("");
-    setNewMinorCategory("");
-    setNewLocation("");
     setShowAddForm(false);
   };
 

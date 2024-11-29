@@ -141,13 +141,20 @@ const AddEquipmentModal = ({ isOpen, onClose, onAdd }) => {
             placeholder="Location"
             className="border rounded w-full p-3"
           />
-          <input
-            type="text"
+          <select
             value={condition}
             onChange={(e) => setCondition(e.target.value)}
-            placeholder="Condition"
             className="border rounded w-full p-3"
-          />
+          >
+            <option value="">Select Condition</option>
+            <option value="Operational">Operational</option>
+            <option value="Good condition">Good condition</option>
+            <option value="Bad condition">Bad condition</option>
+            <option value="For repair">For repair</option>
+            <option value="For dispose">For dispose</option>
+            <option value="Worn out">Worn out</option>
+            <option value="Defective">Defective</option>
+          </select>
           <input
             type="date"
             value={dateAcquired}

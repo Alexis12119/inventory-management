@@ -8,11 +8,8 @@ const EditSalesModal = ({
   inventoryRecords,
 }) => {
   const [editItemCount, setEditItemCount] = useState("");
-  const [editRemarks, setRemarks] = useState("");
   const [editStudentName, setEditStudentName] = useState("");
   const [editStudentId, setEditStudentId] = useState("");
-  const [editDescription, setEditDescription] = useState("");
-  const [editItemType, setEditItemType] = useState("");
   const [editCourseAndSection, setEditCourseAndSection] = useState("");
   const [editORNumber, setEditORNumber] = useState("");
 
@@ -20,11 +17,8 @@ const EditSalesModal = ({
     if (item) {
       setEditItemCount(item.item_count.toString());
       setEditStudentName(item.student_name || "");
-      setRemarks(item.remarks || "");
       setEditStudentId(item.student_id || "");
       setEditCourseAndSection(item.course_and_section || "");
-      setEditDescription(item.item_desc || "");
-      setEditItemType(item.item_type || "");
     }
   }, [item]);
 
@@ -72,29 +66,6 @@ const EditSalesModal = ({
           placeholder="OR Number"
           className="border p-2 mb-2 w-full"
         />
-        <input
-          type="text"
-          value={editRemarks}
-          onChange={(e) => setRemarks(e.target.value)}
-          placeholder="Remarks"
-          className="border p-2 mb-2 w-full"
-        />
-        <input
-          type="text"
-          value={editDescription}
-          onChange={(e) => setEditDescription(e.target.value)}
-          placeholder="Description"
-          className="border p-2 mb-2 w-full"
-        />
-        <select
-          value={editItemType}
-          onChange={(e) => setEditItemType(e.target.value)}
-          className="border p-2 mb-2 w-full"
-        >
-          <option value="">Select Item Type</option>
-          <option value="Proware">Proware</option>
-          <option value="Uniform">Uniform</option>
-        </select>
         <div className="flex justify-end">
           <button
             onClick={() =>
@@ -104,10 +75,7 @@ const EditSalesModal = ({
                 editStudentName,
                 editStudentId,
                 editCourseAndSection,
-                editRemarks,
                 editORNumber,
-                editDescription,
-                editItemType,
               )
             }
             className="bg-blue-500 text-white py-2 px-4 rounded mr-2"
